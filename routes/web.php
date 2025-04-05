@@ -30,6 +30,12 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::prefix('bookpage')->name('bookpage.')->group(function(){
         Route::get('/index', [BookPageController::class, 'index'])->name('index');
         Route::post('/index', [BookPageController::class,'storeBookPage'])->name('store');
+        Route::get('/view', [BookPageController::class,'view'])->name('view');
+        Route::post('/update/{bookpage}', [BookPageController::class,'updateBookPage'])->name('update');
+        Route::post('/delete/{bookpage}', [BookPageController::class,'deleteBook'])->name('delete');
+
+
+
 
         });
         //Route::get('/home', [AdminHomeController::class, 'index'])->name('home')->middleware(AdminMiddleware::class);

@@ -6,7 +6,6 @@
     <head>
         <title>{{ $pageTitle ?? 'Dashboard' }} | {{ config('app.name') }}</title>
         <meta name="csrf-token" content="{{ csrf_token() }}">
-
         <link rel="shortcut icon" href="{{ asset('favicon.png') }}" />
 
         <!--begin::Fonts(mandatory for all pages)-->
@@ -122,6 +121,8 @@
 
         <script src="{{ asset('admin_assets/plugins/global/plugins.bundle.js') }}"></script>
         <script src="{{ asset('admin_assets/js/scripts.bundle.js') }}"></script>
+        <script src="{{ asset('employee_assets/js/custom.js') }}"></script>
+
         <!--end::Global Javascript Bundle-->
 
         <!--begin::Vendors Javascript(used for this page only)-->

@@ -7,20 +7,48 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Http\Requests\BookPageRequest;
 use Illuminate\Support\Facades\Session;
+use Illuminate\Support\Facades\Storage;
 
 class BookPageController extends Controller
 {
     //
     public function index()
     {
-        return view('admin.bookpage.index');
+        $bookpages = BookPage::latest()->get();
+        return view('admin.bookpage.index', compact('bookpages'));
     }
 
-    /*public function index()
+    public function storeBookPage2(Request $request)
     {
-        $certificates = Certificate::latest()->get();
-        return view('admin.certificates.index', compact('certificates'));
-    }*/
+        $bk = BookPage::create([
+            'name' => $request->book_name,
+             'description' => 'abc',
+            'categories' => 'red',
+            'release_year' => '122',
+            'file_path' => 'abc',
+            'file_path_pdf' => '11',
+            'status' => true,
+        ]);
+
+        // Flush Session Success Message
+        Session::flash('success', 'BookPage created successfully.');
+if($bk)
+{
+        return response()->json([
+            'success' => true,
+            'message' => 'BookPage created successfully.',
+            'redirect_url' => route('admin.bookpage.index'),
+        ], 201);
+    }
+    else
+    {
+        return response()->json([
+            'success' => 'notcreated',
+            'message' => 'not created',
+           
+        ],);
+    }
+    }
 
     public function storeBookPage(Request $request)
     {
@@ -32,13 +60,21 @@ class BookPageController extends Controller
             $filePath = $file->store('bookpages', 'public');
         }
 
+        $filePathPdf = null;
+        if ($request->hasFile('book_pdf')) {
+            $file = $request->file('book_pdf');
+            $filePathPdf = $file->store('bookpdfs', 'public');
+        }
+
         // Create certificate
         $bookpage = BookPage::create([
+            'user_id' => 2,
             'name' => $request->book_name,
             'description' => $request->book_description,
             'categories' => trim($request->categories),
+            'release_year' => $request->release_year,
             'file_path' => $filePath,
-            'user_id' => auth()->user()->id,
+            'file_path_pdf' => $filePathPdf,
             'status' => true,
         ]);
 
@@ -52,45 +88,76 @@ class BookPageController extends Controller
         ], 201);
     }
 
-    public function updateCertificate(UpdateCertificateRequest $request, Certificate $certificate)
+    public function updateBookPage(Request $request, BookPage $bookpage)
     {
+       // dd('11');
         // Handle file upload
-        $filePath = $certificate->file_path ?? null;
-        if ($request->hasFile('certificate_file')) {
+        $filePath = $bookpage->file_path ?? null;
+        if ($request->hasFile('book_image')) {
             // Delete old file if it exists
-            if ($certificate->file_path) {
-                Storage::disk('public')->delete($certificate->file_path);
+            if ($bookpage->file_path) {
+                Storage::disk('public')->delete($bookpage->file_path);
             }
 
             // Store new file
-            $filePath = $request->file('certificate_file')->store('certificates', 'public');
+            $filePath = $request->file('book_image')->store('bookpages', 'public');
+        }
+        $filePathPdf = $bookpage->file_path_pdf ?? null;
+
+        if ($request->hasFile('book_pdf')) {
+            // Delete old file if it exists
+            if ($bookpage->file_path_pdf) {
+                Storage::disk('public')->delete($bookpage->file_path_pdf);
+            }
+
+            // Store new file
+            $filePathPdf = $request->file('book_pdf')->store('bookpdfs', 'public');
         }
 
-        // Update certificate
-        $certificate->update([
-            'name' => $request->certificate_name,
-            'description' => $request->certificate_description,
+        // Update bookpage
+        $bookpage->update([
+            'name' => $request->book_name,
+            'description' => $request->book_description,
             'categories' => trim($request->categories),
-            'level' => $request->certificate_level,
-            'file_path' => $filePath
+            'file_path' => $filePath,
+            'file_path_pdf' => $filePathPdf,
+            'user_id' => auth()->user()->id,
         ]);
 
         // Flush Session Success Message
-        Session::flash('success', 'Certificate updated successfully.');
+        Session::flash('success', 'Book updated successfully.');
 
         return response()->json([
             'success' => true,
-            'message' => 'Certificate updated successfully.',
-            'redirect_url' => route('admin.certificates'),
+            'message' => 'Book updated successfully.',
+            'redirect_url' => route('admin.bookpage.index'),
         ], 200);
     }
 
-    public function toggleStatus(Certificate $certificate)
+    public function deleteBook(Request $request,BookPage $book)
     {
-        $certificate->status = !$certificate->status; // Toggle status
-        $certificate->save();
+        //dd(str_replace('"','', $request->id));
+        
+        // if ($book->user_id !== auth()->user()->id || ($request->id !== auth()->user()->id)) {
+        //     abort(403, 'Unauthorized action.');
+        // }
 
-        return redirect()->back()->with('success', 'Certificate status updated successfully.');
+        if (!auth()->user()->is_admin) {
+            abort(403, 'Unauthorized action.');
+        }
+
+        if ($book->file_path && Storage::disk('public')->exists($book->file_path)) {
+            Storage::disk('public')->delete($book->file_path);
+        }
+        if ($book->file_path_pdf && Storage::disk('public')->exists($book->file_path_pdf)) {
+            Storage::disk('public')->delete($book->file_path_pdf);
+        }
+        //$book->delete();
+        BookPage::where('id', $request->id)->delete();
+
+        //$book->delete();
+
+        return redirect()->back()->with('success', 'Book deleted successfully.');
     }
 
 
