@@ -33,4 +33,9 @@ class AdminLoginController extends Controller
         }
         return back()->withErrors(['email' => 'wrong credentials.You are not authorised']);
     }
+
+    public function test()
+    {
+        return view('admin.auth.test');
+    }
 }

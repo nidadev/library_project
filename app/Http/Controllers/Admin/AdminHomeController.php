@@ -13,4 +13,9 @@ class AdminHomeController extends Controller
     {
         return view('admin.home');
     }
+
+    public function bookpage()
+    {
+        return view('admin.bookpage');
+    }
 }

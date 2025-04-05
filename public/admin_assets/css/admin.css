@@ -1,0 +1,157 @@
+/* Main Css  */
+.max-content-large {
+    min-width: 200px !important;
+}
+
+.max-content-small {
+    min-width: 150px !important
+}
+
+.max-content-small-xxl {
+    min-width: 90px !important;
+}
+
+
+#mainImage {
+    object-fit: cover;
+}
+
+.pdf-text {
+    color: var(--orange-color);
+}
+
+.text-orange {
+    color: var(--orange-color) !important;
+}
+
+.life-mp-images:nth-child(1) {
+    margin-top: 20px;
+}
+
+.life-mp-images img {
+    height: 227px !important;
+
+}
+.max-height-card {
+    max-height: 339px !important;
+    overflow-y: scroll !important;
+}
+.life-mp-images button {
+    width: 30px;
+    height: 38px;
+    top: -15px;
+    right: -11px;
+    background-color: var(--orange-color);
+
+}
+
+.life-mp-images i {
+    color: white !important;
+}
+td {
+    vertical-align: middle !important;
+}
+
+td .btn.btn-danger:not(.down-cv) {
+    background-color: var(--bs-danger);
+    border: 1px solid var(--bs-danger) !important;
+}
+
+td .btn.btn-danger:hover {
+    border: 1px solid var(--bs-danger) !important;
+    background-color: transparent !important;
+}
+
+td .btn.btn-danger:hover i {
+    color: var(--bs-danger) !important;
+}
+
+.modal-footer .btn.btn-warning {
+    background-color: var(--orange-color);
+    border: 1px solid var(--orange-color);
+    color: white !important;
+}
+
+.modal-footer .btn.btn-warning:focus,
+.modal-footer .btn.btn-warning:hover {
+    border: 1px solid var(--orange-color);
+    background-color: transparent !important;
+    color: var(--orange-color) !important;
+}
+
+.accordion-button:not(.collapsed) {
+    color: white !important;
+}
+
+/* thead {
+    background-color: #000;
+    color: #FFF;
+} */
+
+tbody tr td,
+thead tr th {
+    padding-left: 10px !important;
+}
+
+.accordion-button:not(.collapsed)::after {
+    background-image: url('data:image/svg+xml,%3csvg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 16 16" fill="white"%3e%3cpath fill-rule="evenodd" d="M1.646 4.646a.5.5 0 0 1 .708 0L8 10.293l5.646-5.647a.5.5 0 0 1 .708.708l-6 6a.5.5 0 0 1-.708 0l-6-6a.5.5 0 0 1 0-.708z"/%3e%3c/svg%3e') !important;
+
+}
+.image-fit {
+    width: 60px;
+    height: 60px;
+    object-fit: fill;
+}
+.hr_Icon {
+    width: 40px;
+    height: 40px;
+}
+.dataTables_wrapper .dataTables_paginate .paginate_button:active {
+    box-sizing: none !important;
+}
+
+.custom-card {
+    border: 2px solid var(--orange-color);
+    margin-top: 50px !important;
+    margin-bottom: 50px !important;
+}
+.card-title-info  {
+    left: 50%;
+    transform: translateX(-50%);
+    top: -23px;
+    z-index: 20 !important;
+    border: 1px solid var(--orange-color);
+    transition: all 0.6s ease-in-out;
+}
+.card-title-info:hover  {
+    background-color: var(--orange-color) !important;
+ }
+.card-title-info h5  {color: var(--orange-color); }
+.card-title-info:hover h5  {color: var(--bs-white) }
+
+.contact-description {
+    width: 300px;
+    max-width: 300px;
+    word-wrap: break-word;
+    overflow-wrap: break-word;
+}
+.post-job-header h2 {
+    border-radius: 0px !important;
+}
+.btn {
+    cursor: pointer !important;
+}
+
+/* Main Css  */
+
+
+ .dt-buttons:not(.not-take) {
+    position: absolute !important;
+    right: 85px !important;
+    top: 220px;
+    gap: 10px;
+}
+
+.calendar-table th {
+    background-color: white !important;
+}

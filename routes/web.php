@@ -18,11 +18,14 @@ Route::prefix('admin')->name('admin.')->group(function(){
     Route::middleware([GuestAdminMiddleware::class])->group(function(){
         Route::get('/login', [AdminLoginController::class,'index']);
         Route::post('/login', [AdminLoginController::class,'login'])->name('login');
+        Route::get('/test', [AdminLoginController::class,'test']);
+
        });
 
 
     Route::middleware(['auth', AdminMiddleware::class])->group(function(){
         Route::get('/home', [AdminHomeController::class, 'index'])->name('home');
+        Route::get('/bookpage', [AdminHomeController::class, 'bookpage'])->name('bookpage');
         //Route::get('/home', [AdminHomeController::class, 'index'])->name('home')->middleware(AdminMiddleware::class);
     });
     
