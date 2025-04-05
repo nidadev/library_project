@@ -26,8 +26,8 @@
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a class="menu-link gap-3 {{ request()->routeIs('admin.bookpage') ? 'active' : '' }}"
-                        href="{{ route('admin.bookpage') }}">
+                    <a class="menu-link gap-3 {{ request()->routeIs('admin.bookpage.index') ? 'active' : '' }}"
+                        href="{{ route('admin.bookpage.index') }}">
                         <span class="menu-bullet">
                             <i class="bi bi-book fs-3 text-white"></i>
                         </span>
