@@ -3,7 +3,7 @@
     <div class="header-brand">
         <!--begin::Logo-->
         <a href="{{ route('admin.home') }}" class="d-flex align-items-center">
-            <img alt="Logo" src="{{ asset('assets/images/logo/logo-white.png') }}" class="h-50px">
+            <img alt="Logo" src="" class="h-50px">
         </a>
         <!--end::Logo-->
         <!--begin::Aside minimize-->

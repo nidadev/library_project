@@ -29,6 +29,8 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
         Route::prefix('bookpage')->name('bookpage.')->group(function(){
         Route::get('/index', [BookPageController::class, 'index'])->name('index');
+        Route::post('/index', [BookPageController::class,'storeBookPage'])->name('store');
+
         });
         //Route::get('/home', [AdminHomeController::class, 'index'])->name('home')->middleware(AdminMiddleware::class);
     });
