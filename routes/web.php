@@ -2,13 +2,15 @@
 
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
-use App\Http\Controllers\Admin\AdminHomeController;
-use App\Http\Controllers\Admin\AdminLoginController;
-use App\Http\Controllers\Admin\BookPageController;
-use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Middleware\UserMiddleware;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\GuestAdminMiddleware;
-use App\Http\Middleware\UserMiddleware;
+use App\Http\Controllers\User\UserHomeController;
+use App\Http\Controllers\Admin\BookPageController;
+use App\Http\Controllers\User\UserLoginController;
+use App\Http\Controllers\Admin\AdminHomeController;
+use App\Http\Controllers\Admin\DashboardController;
+use App\Http\Controllers\Admin\AdminLoginController;
 
 Route::get('/', function () {
     return view('welcome');
@@ -51,7 +53,17 @@ Route::prefix('admin')->name('admin.')->group(function(){
     });
     
  
-
+    Route::prefix('user')->name('user.')->group(function(){
+        Route::middleware([GuestAdminMiddleware::class])->group(function(){
+            Route::get('/login', [UserLoginController::class,'index']);
+            Route::post('/login', [UserLoginController::class,'login'])->name('login');
+            Route::get('/test', [UserLoginController::class,'test']);
+    
+           });
+        Route::middleware(['auth', UserMiddleware::class])->group(function(){
+            Route::get('/home', [UserHomeController::class, 'index'])->name('home');
+        });
+    });
 
 Auth::routes();
 
