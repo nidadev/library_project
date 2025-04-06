@@ -5,6 +5,7 @@ use Illuminate\Support\Facades\Route;
 use App\Http\Controllers\Admin\AdminHomeController;
 use App\Http\Controllers\Admin\AdminLoginController;
 use App\Http\Controllers\Admin\BookPageController;
+use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Middleware\AdminMiddleware;
 use App\Http\Middleware\GuestAdminMiddleware;
 use App\Http\Middleware\UserMiddleware;
@@ -26,6 +27,8 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
     Route::middleware(['auth', AdminMiddleware::class])->group(function(){
         Route::get('/home', [AdminHomeController::class, 'index'])->name('home');
+        
+
 
         Route::prefix('bookpage')->name('bookpage.')->group(function(){
         Route::get('/index', [BookPageController::class, 'index'])->name('index');
@@ -34,10 +37,14 @@ Route::prefix('admin')->name('admin.')->group(function(){
         Route::post('/update/{bookpage}', [BookPageController::class,'updateBookPage'])->name('update');
         Route::post('/delete/{bookpage}', [BookPageController::class,'deleteBook'])->name('delete');
 
+        Route::get('/dashboard', [DashboardController::class, 'dashboard'])->name('dashboard');
+                Route::post('dashboard/data', [DashboardController::class, 'fetchDashboardData'])->name('dashboard.data'); 
+
 
 
 
         });
+
         //Route::get('/home', [AdminHomeController::class, 'index'])->name('home')->middleware(AdminMiddleware::class);
     });
     

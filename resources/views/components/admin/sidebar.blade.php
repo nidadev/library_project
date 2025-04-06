@@ -22,6 +22,15 @@
                         <span class="menu-bullet">
                             <i class="bi bi-house fs-3 text-white"></i>
                         </span>
+                        <span class="menu-title text-white">Home</span>
+                    </a>
+                </div>
+                <div class="menu-item">
+                    <a class="menu-link gap-3 {{ request()->routeIs('admin.bookpage.dashboard') ? 'active' : '' }}"
+                        href="{{ route('admin.bookpage.dashboard') }}">
+                        <span class="menu-bullet">
+                            <i class="bi bi-book fs-3 text-white"></i>
+                        </span>
                         <span class="menu-title text-white">Dashboard</span>
                     </a>
                 </div>
@@ -34,6 +43,8 @@
                         <span class="menu-title text-white">Book Page</span>
                     </a>
                 </div>
+
+               
                 <!--div data-kt-menu-trigger="click"
                     class="menu-item menu-accordion {{ request()->routeIs('admin.home') ? 'show' : '' }}">
                     <!-- Certificate Parent Menu -->

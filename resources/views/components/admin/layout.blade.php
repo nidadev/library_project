@@ -18,6 +18,7 @@
         <link href="{{ asset('admin_assets/css/admin.css') }}" rel="stylesheet" type="text/css" />
         <link href="{{ asset('jodit/jodit.min.css') }}" rel="stylesheet" type="text/css" />
         <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/bootstrap-icons@1.11.3/font/bootstrap-icons.min.css">
+
         <!--end::Global Stylesheets Bundle-->
 
         <style>
@@ -120,6 +121,7 @@
         <!--end::Page-->
 
         <script src="{{ asset('admin_assets/plugins/global/plugins.bundle.js') }}"></script>
+
         <script src="{{ asset('admin_assets/js/scripts.bundle.js') }}"></script>
         <script src="{{ asset('employee_assets/js/custom.js') }}"></script>
 

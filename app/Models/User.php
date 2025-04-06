@@ -45,4 +45,10 @@ class User extends Authenticatable
             'password' => 'hashed',
         ];
     }
+
+     // Relationship: An Employer (User) has Many Books
+     public function books()
+     {
+         return $this->hasMany(BookPage::class, 'user_id');
+     }
 }

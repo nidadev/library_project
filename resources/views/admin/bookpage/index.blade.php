@@ -409,6 +409,8 @@
         </div>
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
+    @push('scripts')
+        
     <script>
         $(document).ready(function() {
             $.ajaxSetup({
@@ -702,6 +704,28 @@
                 $('#book_name').closest('.fv-row').find('.fv-plugins-message-container').empty();
             }
 
+            var pdfName = $('#book_pdf').val().trim();
+            if (pdfName === '') {
+                $('#book_pdf').addClass('is-invalid');
+                $('#book_pdf').closest('.fv-row').find('.fv-plugins-message-container').text(
+                    'Book Pdf is required.').show();
+                isValid = false;
+            } else {
+                $('#book_pdf').removeClass('is-invalid');
+                $('#book_pdf').closest('.fv-row').find('.fv-plugins-message-container').empty();
+            }
+
+            var coverImage = $('#book_image').val().trim();
+            if (coverImage === '') {
+                $('#book_image').addClass('is-invalid');
+                $('#book_image').closest('.fv-row').find('.fv-plugins-message-container').text(
+                    'Book cover is required.').show();
+                isValid = false;
+            } else {
+                $('#book_image').removeClass('is-invalid');
+                $('#book_image').closest('.fv-row').find('.fv-plugins-message-container').empty();
+            }
+
             // Validate Release year Name
             var releaseYear = $('#release_year').val().trim();
             if (releaseYear === '') {
@@ -898,4 +922,6 @@
             return isValid;
         }
     </script>
+        @endpush
+
 </x-admin.layout>
