@@ -14,13 +14,16 @@ class DashboardController extends Controller
     public function dashboard(Request $request)
     {
         //$dashboardData = $this->getDashboardData($request);
-        $users = User::all();
+    //     $users = User::all();
 
-        $books = BookPage::with('user')->get();
-       //dd($books->id);
-        $totalBooks = BookPage::all()->count();
+    //     $books = BookPage::with('user')->get();
+    //    //dd($books->id);
+    //     $totalBooks = BookPage::all()->count();
 
-        return view('admin.dashboard',compact('users','totalBooks', 'books'));
+    //     return view('admin.dashboard',compact('users','totalBooks', 'books'));
+        $dashboardData = $this->getDashboardData($request);
+        //dd($dashboardData);
+        return view('admin.dashboard', $dashboardData);
     }
 
     public function fetchDashboardData(Request $request)
@@ -39,6 +42,10 @@ class DashboardController extends Controller
         $books = BookPage::whereBetween('created_at', [$startDate, $endDate]);
 
         $totalBooks = (clone $books)->count();
+        $totalUsers = (clone $users)->count();
+        $userData = (clone $users)->get();
+        $bookData = (clone $books)->get();
+
 
         // Get applied job IDs
         // $appliedJobIds = candidate()->jobApplications()->pluck('job_post_id')->toArray();
@@ -64,8 +71,10 @@ class DashboardController extends Controller
         //     ->get();
 
         return compact(
-            'users',
+            'userData',
             'totalBooks',
+            'totalUsers',
+            'bookData',
             // 'jobApplicationsCount',
             // 'shortlisted',
             // 'interviews',

@@ -85,7 +85,7 @@
 
     <!-- Dynamic Data Section -->
     <div id="dashboard-content">
-        @include('partials.admin.dashboard', ['users' => $users,])
+        @include('partials.admin.dashboard', ['users' => $userData ])
     </div>
 
     <!-- Job Details Drawer -->
@@ -148,6 +148,7 @@
     @push('scripts')
         <script>
             $(document).ready(function() {
+                alert('')
                 // Initialize Date Range Picker
                 var startOfMonth = moment().startOf('month');
                 var endOfMonth = moment().endOf('month');
@@ -249,7 +250,7 @@
 
             // Function to initialize DataTables
             function initializeDataTables() {
-                $('#appliedJobsTable').DataTable({
+                $('#appliedJobsTable','#recommendedJobsTable').DataTable({
                     "destroy": true,  
                     "order": []
                 });
@@ -268,6 +269,7 @@
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
+                        //alert(response);
                         $("#dashboard-skeleton").addClass('d-none');
                         $("#dashboard-content").html(response).fadeIn();
                         initializeDataTables();

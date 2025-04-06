@@ -27,7 +27,7 @@
                 <h5 class="fs-1 fw-bolder">Total Users</h5>
             </div>
             <div class="card-body">
-                <h2 class="display-3"></h2>
+                <h2 class="display-3">{{ $totalUsers }}</h2>
             </div>
         </div>
     </div>
@@ -38,7 +38,7 @@
                 <h3 class="card-title fs-1">Newly Registered Users</h3>
             </div>
             <div class="px-3 py-1">
-                @if ($users->isEmpty())
+                @if ($userData->isEmpty())
                     <x-empty-state title="No Users" message="You have no users yet." />
                 @else
                     <table class="table table-striped" id="appliedJobsTable">
@@ -51,7 +51,7 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($users as $user)
+                            @foreach ($userData as $user)
                                 <tr>
                                     <td>{{$user->name}}</td>
                                     <td>{{$user->email}}</td>
@@ -80,7 +80,7 @@
                 <h3 class="card-title fs-1">Recently added books</h3>
             </div>
             <div class="px-3 py-1">
-                @if ($books->isEmpty())
+                @if ($bookData->isEmpty())
                     <x-empty-state title="No Recommended Jobs" message="No recommended jobs available at the moment." />
                 @else
                     <table class="table table-striped" id="recommendedJobsTable">
@@ -93,10 +93,10 @@
                             </tr>
                         </thead>
                         <tbody>
-                            @foreach ($books as $bk)
+                            @foreach ($bookData as $bk)
                                 <tr>
                                     <td>{{ $bk->name }}</td>
-                                    <td>{{ $bk->user }}</td>
+                                    <td>{{ $bk->name }}</td>
                                     <td>{{ $bk->description }}</td>
                                     <td></td>
                                     <td>
