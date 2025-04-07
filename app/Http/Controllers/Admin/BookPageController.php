@@ -176,9 +176,10 @@ if($bk)
 
     }
 
-    public function borrowRequestSend($id)
+    public function borrowRequestSend($id,Request $request)
     {
         //dd($id);
+        //dd($request);
         $borrow = Borrow::find($id);
         //dd($borrow);
         $user_id = auth()->user()->id;
@@ -187,6 +188,8 @@ if($bk)
         //dd($book);
 
         //dd($book);
+        if(isset($request->approve))
+        {
         if ($book->quantity >= 1) {
             //send borrow request
             $book->quantity = $book->quantity - 1;
@@ -209,6 +212,33 @@ if($bk)
             return redirect()->route('admin.bookpage.dashboard')->with('error', 'Current book not available');
 
         }
+    }
+
+    if(isset($request->reject))
+    {
+    if ($book->quantity >= 1) {
+        //send borrow request
+        $book->quantity = $book->quantity - 1;
+
+       //update book table quantity
+       BookPage::where('id', $book->id)->update(['quantity' => $book->quantity]);
+
+       //update borrow status
+       Borrow::where('id', $borrow->id)->update(['status' => 'rejected']);
+
+        //add to table
+        Session::flash('success', 'Borrow request approve');
+
+        return redirect()->route('admin.bookpage.dashboard')->with('success', 'Borrow request reject');
+
+        //dd('add to db');
+    } else {
+        //dd('error');
+        Session::flash('error', 'some error not approved');
+        return redirect()->route('admin.bookpage.dashboard')->with('error', 'Current book not available');
+
+    }
+}
         //dd($book_id);
         //dd('borrow post');
     }

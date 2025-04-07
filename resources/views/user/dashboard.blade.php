@@ -144,7 +144,7 @@
     @push('scripts')
         <script>
             $(document).ready(function() {
-                alert('11');
+                //alert('11');
                 // Initialize Date Range Picker
                 var startOfMonth = moment().startOf('month');
                 var endOfMonth = moment().endOf('month');

@@ -34,17 +34,23 @@ class DashboardController extends Controller
 
     private function getDashboardData(Request $request)
     {
+        //dd($request);
         $startDate = $request->start_date ? Carbon::parse($request->start_date) : now()->startOfMonth();
         $endDate = $request->end_date ? Carbon::parse($request->end_date) : now()->endOfMonth();
+
 
         //
         $users = User::whereBetween('created_at', [$startDate, $endDate]);
         $books = BookPage::whereBetween('created_at', [$startDate, $endDate]);
 
+
         $totalBooks = (clone $books)->count();
         $totalUsers = (clone $users)->count();
         $userData = (clone $users)->get();
         $bookData = (clone $books)->get();
+
+
+        //dd($wish);
 
 
         // Get applied job IDs

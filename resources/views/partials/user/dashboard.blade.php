@@ -14,7 +14,7 @@
                 <h5 class="fs-1 fw-bolder">Borrowed Books </h5>
             </div>
             <div class="card-body">
-                <h2 class="display-3"></h2>
+                <h2 class="display-3">{{ $totalBorrow }}</h2>
             </div>
         </div>
     </div>
@@ -24,7 +24,7 @@
                 <h5 class="fs-1 fw-bolder">Wish List</h5>
             </div>
             <div class="card-body">
-                <h2 class="display-3">{{ $totalUsers }}</h2>
+                <h2 class="display-3">{{ $totalWish }}</h2>
             </div>
         </div>
     </div>
@@ -75,9 +75,14 @@
                                                     Total<br><strong>20</strong><br>
                                                   </span-->
                                                   <div class="text-button">
-                                                    <a href="details.html">View Item Details</a>
+                                                    <!--a href="details.html">View Item Details</a-->
                                                   </div>
-
+                                                  @if($bk->quantity <= 0)
+                                                  <div class="text-button">
+                                                    <button class="btn btn-info" href="#"  data-bs-toggle="modal"
+                                                    data-bs-target="#wishModal_{{ $bk->id }}" >Wishlist</button>
+                                                  </div>
+@endif
                                                   <div class="text-button">
                                                     <button class="btn btn-success" href="#"  data-bs-toggle="modal"
                                                     data-bs-target="#deleteModal_{{ $bk->id }}" >Borrow Request</button>
@@ -110,6 +115,41 @@
                     action="{{ route('user.bookpage.borrow.store', $bk->id) }}"
                     method="POST">
                     @csrf
+                    <input type="hidden" name="borrow" value="borrow">
+
+                    <button type="submit" class="btn btn-danger">
+                        Yes,Send
+                    </button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+<!--------- ---------->
+
+<!----------- Borrow Request -->
+<div class="modal fade" id="wishModal_{{ $bk->id }}" tabindex="-1"
+    aria-labelledby="statusModalLabel" aria-hidden="true"
+    data-bs-backdrop="static">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Wish Request</h5>
+                <button type="button" class="btn-close"
+                    data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body">
+                Are you sure you want to wish this book
+                <strong>{{ $bk->name }}</strong>?
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-secondary"
+                    data-bs-dismiss="modal">Cancel</button>
+                <form
+                    action="{{ route('user.bookpage.borrow.store', $bk->id) }}"
+                    method="POST">
+                    @csrf
+                    <input type="hidden" name="wish" value="wish">
                     <button type="submit" class="btn btn-danger">
                         Yes,Send
                     </button>
@@ -194,3 +234,4 @@
 
 
 </div>
+

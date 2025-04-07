@@ -47,13 +47,13 @@
                 @if ($userData->isEmpty())
                     <x-empty-state title="No Users" message="You have no users yet." />
                 @else
-                    <table class="table table-striped" id="appliedJobsTable">
+                    <table class="table table-striped" id="usersTable">
                         <thead>
                             <tr>
                                 <th>Name</th>
                                 <th>Email</th>
                                 <th>Applied Date</th>
-                                <th>Action</th>
+                                <!--th>Action</th-->
                             </tr>
                         </thead>
                         <tbody>
@@ -63,12 +63,12 @@
                                     <td>{{$user->email}}</td>
                                     <td>{{$user->created_at->format('d M Y')}}</td>
                                     <td></td>
-                                    <td>
+                                    <!--td>
                                         <button class="btn btn-primary view-job" data-id="{{ $user->id }}"
                                             data-bs-toggle="modal" data-bs-target="#jobDetailModal">
                                             <i class="fas fa-eye me-1"></i> View
                                         </button>
-                                    </td>
+                                    </td-->
                                 </tr>
                             @endforeach
                         </tbody>
@@ -89,7 +89,7 @@
                 @if ($bookData->isEmpty())
                     <x-empty-state title="No Recommended Jobs" message="No recommended jobs available at the moment." />
                 @else
-                    <table class="table table-striped" id="recommendedJobsTable">
+                    <table class="table table-striped" id="booksTable">
                         <thead>
                             <tr>
                                 <th>Book Title</th>

@@ -51,12 +51,12 @@
 
                                           <div class="text-button">
                                             <button class="btn btn-danger" href="#"  data-bs-toggle="modal"
-                                            data-bs-target="#deleteModal2_{{ $br->id }}" >Reject</button>
+                                            data-bs-target="#rejectModal_{{ $br->id }}" >Reject</button>
                                           </div>
 
                                     </td>
                                 </tr>
-  <!-- Delete Modal -->
+  <!-- Approve Modal -->
                                             <div class="modal fade" id="approveModal_{{ $br->id }}" tabindex="-1"
                                                 aria-labelledby="statusModalLabel" aria-hidden="true"
                                                 data-bs-backdrop="static">
@@ -78,6 +78,8 @@
                                                                 action="{{ route('admin.bookpage.borrow.store', $br->id) }}"
                                                                 method="POST">
                                                                 @csrf
+                                                                <input type="hidden" name="approve" value="approve">
+
                                                                 <button type="submit" class="btn btn-danger">
                                                                     Yes,Approve
                                                                 </button>
@@ -86,6 +88,39 @@
                                                     </div>
                                                 </div>
                                             </div>
+
+                                            <!------- Reject Modal --->
+                                            <div class="modal fade" id="rejectModal_{{ $br->id }}" tabindex="-1"
+                                                aria-labelledby="statusModalLabel" aria-hidden="true"
+                                                data-bs-backdrop="static">
+                                                <div class="modal-dialog">
+                                                    <div class="modal-content">
+                                                        <div class="modal-header">
+                                                            <h5 class="modal-title">Reject</h5>
+                                                            <button type="button" class="btn-close"
+                                                                data-bs-dismiss="modal"></button>
+                                                        </div>
+                                                        <div class="modal-body">
+                                                            Are you sure you want to reject this request
+                                                            <strong>{{ $br->book->title }}</strong>?
+                                                        </div>
+                                                        <div class="modal-footer">
+                                                            <button type="button" class="btn btn-secondary"
+                                                                data-bs-dismiss="modal">Cancel</button>
+                                                            <form
+                                                                action="{{ route('admin.bookpage.borrow.store', $br->id) }}"
+                                                                method="POST">
+                                                                @csrf
+                                                                <input type="hidden" name="reject" value="reject">
+                                                                <button type="submit" class="btn btn-danger">
+                                                                    Yes,Reject
+                                                                </button>
+                                                            </form>
+                                                        </div>
+                                                    </div>
+                                                </div>
+                                            </div>
+                                            <!-- ------>
 
                             @endforeach
                         </tbody>

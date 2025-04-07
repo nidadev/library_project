@@ -6,14 +6,34 @@
                 <input class="form-control" placeholder="Pick date range" id="dateRange" />
             </div>
             <div>
-                <input class="form-control" placeholder="Pick title" id="" />
+                <!--input class="form-control" placeholder="Pick Author" id="author" /-->
+                <select class="form-select" id="author" aria-label="Default select example">
+                    <option selected>Select</option>
+                    @foreach($author as $at)
+                    <?php //dd($author) ?>
+                    <option value="{{ $at }}">Admin</option>
+
+                    @endforeach
+                  </select>
             </div>
             <div>
-                <input class="form-control" placeholder="Pick title" id="" />
+                <input class="form-control" placeholder="Pick Genre" id="genre" />
             </div>
             <div>
-                <input class="form-control" placeholder="Pick title" id="" />
+                <select class="form-select" id="year" aria-label="Default select example">
+                    <option selected>Select</option>
+                    @foreach($release_year as $release_year)
+                    <?php //dd($author) ?>
+                    <option value="{{ $release_year }}">{{ $release_year }}</option>
+
+                    @endforeach
+                  </select>
             </div>
+            <div>
+                <input type="text" name="search" class="form-control"/>
+                <input type="submit" name="submit" class="btn btn-primary form-control">
+            </div>
+
         </div>
     </div>
 
@@ -100,55 +120,12 @@
     </div>
 
     <!-- Apply Job Modal -->
-    <div class="modal fade" id="applyJobModal" tabindex="-1" aria-labelledby="applyJobModalLabel" aria-hidden="true">
-        <div class="modal-dialog">
-            <div class="modal-content">
-                <div class="modal-header">
-                    <h5 class="modal-title">Apply for Job</h5>
-                    <button type="button" class="btn-close" data-bs-dismiss="modal" aria-label="Close"></button>
-                </div>
-                <form method="POST" action="#" id="applyJobForm" enctype="multipart/form-data">
-                    <div class="modal-body">
-                        @csrf
-                        <div class="mb-3 fv-row">
-                            <label for="resumes" class="form-label">Resume</label>
-                            <select class="form-select mb-2" name="resume" id="resumes">
 
-                                <option value="new">Upload New</option>
-                            </select>
-                            <div
-                                class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
-                            </div>
-                        </div>
-                        <!-- Upload Field -->
-                        <div class="mb-3 fv-row" id="upload_file" style="display: none;">
-                            <label for="new_resume" class="form-label">Upload Resume</label>
-                            <input type="file" class="form-control" name="new_resume" id="new_resume">
-                            <div
-                                class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
-                            </div>
-                        </div>
-
-                        <!-- Apply Error Messages -->
-                        <div id="applyJobError" class="text-danger"></div>
-
-                        <input type="hidden" name="job_post_id" id="jobId">
-                    </div>
-                    <div class="modal-footer align-items-baseline">
-                        <button type="button" class="btn btn-secondary btn-sm"
-                            data-bs-dismiss="modal">Cancel</button>
-
-                        <button type="submit" class="btn btn-primary btn-sm text-white">Apply Now</button>
-                    </div>
-                </form>
-            </div>
-        </div>
-    </div>
 
     @push('scripts')
         <script>
             $(document).ready(function() {
-                alert('')
+                //alert('')
                 // Initialize Date Range Picker
                 var startOfMonth = moment().startOf('month');
                 var endOfMonth = moment().endOf('month');
@@ -250,13 +227,14 @@
 
             // Function to initialize DataTables
             function initializeDataTables() {
-                $('#appliedJobsTable','#recommendedJobsTable').DataTable({
+                $('#usersTable','#booksTable').DataTable({
                     "destroy": true,
                     "order": []
                 });
             }
 
             function loadDashboardData(start, end) {
+                //alert(start,end);
                 $("#dashboard-content").hide();
                 $("#dashboard-skeleton").removeClass('d-none');
 
@@ -266,6 +244,41 @@
                     data: {
                         start_date: start,
                         end_date: end,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        alert(response);
+                        $("#dashboard-skeleton").addClass('d-none');
+                        $("#dashboard-content").html(response).fadeIn();
+                        initializeDataTables();
+                    },
+                    error: function() {
+                        $("#dashboard-skeleton").removeClass('d-none');
+                        $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                            .fadeIn();
+                    }
+                });
+            }
+
+
+            $('#author').change(function(){
+                alert('');
+                var author = $('#author').val();
+                alert(author);
+                loadDashboardDataByAuthor(author);
+
+            });
+
+            function loadDashboardDataByAuthor() {
+                alert(author);
+                $("#dashboard-content").hide();
+                $("#dashboard-skeleton").removeClass('d-none');
+
+                $.ajax({
+                    url: "{{ route('admin.bookpage.dashboard.data') }}",
+                    method: "POST",
+                    data: {
+                        author: author,
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
@@ -282,45 +295,7 @@
                 });
             }
 
-            function validateApplyJobForm() {
-                var isValid = true;
 
-                var allowedResumeTypes = ["application/pdf", "application/msword",
-                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                ];
-                var maxSize = 20 * 1024 * 1024; // 20MB
-
-                // Clear previous errors
-                $(".is-invalid").removeClass("is-invalid");
-                $(".fv-plugins-message-container").empty().hide();
-
-                var resumeSelection = $('#resumes').val();
-                var resumeFile = $('#new_resume')[0].files[0];
-
-                // Step 1: Check if a resume is selected
-                if (!resumeSelection) {
-                    $('#resumes').addClass('is-invalid').closest('.fv-row')
-                        .find('.fv-plugins-message-container').text('Resume is required.').show();
-                    isValid = false;
-                } else if (resumeSelection === "new") {
-                    // Step 2: Validate new resume upload
-                    if (!resumeFile) {
-                        $('#new_resume').addClass('is-invalid').closest('.fv-row')
-                            .find('.fv-plugins-message-container').text('Please upload a resume.').show();
-                        isValid = false;
-                    } else if (resumeFile.size > maxSize) {
-                        $('#new_resume').addClass('is-invalid').closest('.fv-row')
-                            .find('.fv-plugins-message-container').text('Resume file should not exceed 20 MB.').show();
-                        isValid = false;
-                    } else if (!allowedResumeTypes.includes(resumeFile.type)) {
-                        $('#new_resume').addClass('is-invalid').closest('.fv-row')
-                            .find('.fv-plugins-message-container').text('Only PDF, DOC, and DOCX files are allowed.').show();
-                        isValid = false;
-                    }
-                }
-
-                return isValid;
-            }
         </script>
     @endpush
 

@@ -47,6 +47,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
                 Route::get('borrow', [BookPageController::class, 'borrowRequest'])->name('borrow');
 
+
                 Route::post('borrow/{id}', [BookPageController::class, 'borrowRequestSend'])->name('borrow.store');
 
 
@@ -78,8 +79,7 @@ Route::prefix('admin')->name('admin.')->group(function(){
                 Route::get('borrow', [UserDashboardController::class, 'borrowRequest'])->name('borrow');
 
                 Route::post('borrow/{id}', [UserDashboardController::class, 'borrowRequestSend'])->name('borrow.store');
-
-
+                Route::get('history', [UserDashboardController::class, 'borrowHistory'])->name('history');
 
             });
         });

@@ -18,7 +18,7 @@
                 id="#kt_aside_menu" data-kt-menu="true">
                 <div class="menu-item">
                     <a class="menu-link gap-3 {{ request()->routeIs('user.home') ? 'active' : '' }}"
-                        href="{{ route('admin.home') }}">
+                        href="{{ route('user.home') }}">
                         <span class="menu-bullet">
                             <i class="bi bi-house fs-3 text-white"></i>
                         </span>
@@ -35,12 +35,12 @@
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a class="menu-link gap-3 {{ request()->routeIs('user.bookpage.index') ? 'active' : '' }}"
-                        href="{{ route('user.bookpage.index') }}">
+                    <a class="menu-link gap-3 {{ request()->routeIs('user.bookpage.history') ? 'active' : '' }}"
+                        href="{{ route('user.bookpage.history') }}">
                         <span class="menu-bullet">
                             <i class="bi bi-book fs-3 text-white"></i>
                         </span>
-                        <span class="menu-title text-white">Book Page</span>
+                        <span class="menu-title text-white">Borrow History</span>
                     </a>
                 </div>
 

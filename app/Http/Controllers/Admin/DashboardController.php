@@ -35,14 +35,25 @@ class DashboardController extends Controller
 
     private function getDashboardData(Request $request)
     {
-        $startDate = $request->start_date ? Carbon::parse($request->start_date) : now()->startOfMonth();
-        $endDate = $request->end_date ? Carbon::parse($request->end_date) : now()->endOfMonth();
+        //dd($request);
+        // $startDate = $request->start_date ? Carbon::parse($request->start_date) : now()->startOfMonth();
+        // $endDate = $request->end_date ? Carbon::parse($request->end_date) : now()->endOfMonth();
+
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
 
         //
         $users = User::whereBetween('created_at', [$startDate, $endDate]);
-        $books = BookPage::whereBetween('created_at', [$startDate, $endDate]);
+        $books = BookPage::whereBetween('created_at', [$startDate, $endDate])->orWhere('user_id', '=' ,$request->author);
+        $author = BookPage::whereBetween('created_at', [$startDate, $endDate])->distinct()->pluck('user_id');
 
-        $borrow = Borrow::whereBetween('created_at', [$startDate, $endDate]);
+        $release_year = BookPage::whereBetween('created_at', [$startDate, $endDate])->distinct()->pluck('release_year');
+
+        //$authorReq = $request->author ? $request->author : null;
+
+//dd($users);
+
+        $borrow = Borrow::where('status','applied')->whereBetween('created_at', [$startDate, $endDate]);
 
         $totalBooks = (clone $books)->count();
         $totalUsers = (clone $users)->count();
@@ -82,7 +93,9 @@ class DashboardController extends Controller
             'totalUsers',
             'bookData',
             'borrowData',
-            'totalBorrow'
+            'totalBorrow',
+            'author',
+            'release_year'
             // 'jobApplicationsCount',
             // 'shortlisted',
             // 'interviews',

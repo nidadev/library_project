@@ -8,7 +8,7 @@ class Borrow extends Model
 {
     //
 
-    protected $fillable = ['user_id','book_id', 'status'];
+    protected $fillable = ['user_id','book_id', 'status', 'wish'];
 
 
     public function user()
