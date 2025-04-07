@@ -144,85 +144,12 @@
                             "month").endOf("month")]
                     }
                 }, function(start, end) {
+                    //alert(start);
                     loadDashboardData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
                 });
 
-                // $('#resumes').on('change', function() {
-                //     if ($(this).val() == 'new') {
-                //         $('#upload_file').show();
-                //     } else {
-                //         $('#upload_file').hide();
-                //     }
-                // });
 
-                // Clear validation and reset form when the modal is closed
-                $("#applyJobModal").on("hidden.bs.modal", function() {
-                    $('#applyJobError').empty();
-                });
 
-                // $(document).on("click", ".view-job", function() {
-                //     let jobId = $(this).data("id");
-                //     $("#jobDetailsContent").html("<p class='text-center'>Loading...</p>");
-
-                //     $.post("{{ route('admin.bookpage.index') }}", {
-                //         job_id: jobId,
-                //         _token: "{{ csrf_token() }}"
-                //     }, function(response) {
-                //         $("#jobDetailsContent").empty().html(response);
-
-                //         // Open the drawer after content is loaded
-                //         const drawerElement = document.querySelector("#jobDetailDrawer");
-                //         if (drawerElement) {
-                //             const drawerInstance = KTDrawer.getInstance(drawerElement);
-                //             if (drawerInstance) {
-                //                 drawerInstance.show();
-                //             }
-                //         }
-                //     });
-                // });
-
-                $(document).on("click", ".apply-now", function() {
-                    $("#jobId").val($(this).data("id"));
-                });
-
-                $("#applyJobForm").submit(function(event) {
-                    event.preventDefault();
-                    if (validateApplyJobForm()) {
-                        let formData = new FormData(this);
-                        let selectedResume = $("#resumes").val();
-
-                        if (selectedResume === "new") {
-                            formData.delete("resume");
-                        } else {
-                            formData.delete("new_resume");
-                        }
-
-                        $.ajax({
-                            url: "{{ route('admin.bookpage.index') }}",
-                            type: "POST",
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            headers: {
-                                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-                            },
-                            success: function(response) {
-                                if (response.success) {
-                                    $("#applyJobModal").modal("hide");
-                                    location.reload();
-                                } else {
-                                    let message = response.message || 'Something went wrong.';
-                                    $('#applyJobError').empty().append(message);
-                                }
-                            },
-                            error: function(xhr) {
-                                let errorMsg = xhr.responseJSON.message ||
-                                    "Something went wrong. Please try again.";
-                                $('#applyJobError').empty().append(errorMsg);
-                            }
-                        });
-                    }
-                });
             });
 
             // Function to initialize DataTables
@@ -234,7 +161,7 @@
             }
 
             function loadDashboardData(start, end) {
-                //alert(start,end);
+            alert(start,end);
                 $("#dashboard-content").hide();
                 $("#dashboard-skeleton").removeClass('d-none');
 
@@ -275,14 +202,14 @@
                 $("#dashboard-skeleton").removeClass('d-none');
 
                 $.ajax({
-                    url: "{{ route('admin.bookpage.dashboard.data') }}",
+                    url: "{{ route('admin.bookpage.dashboard.data.author') }}",
                     method: "POST",
                     data: {
                         author: author,
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
-                        //alert(response);
+                        alert(response);
                         $("#dashboard-skeleton").addClass('d-none');
                         $("#dashboard-content").html(response).fadeIn();
                         initializeDataTables();

@@ -50,6 +50,9 @@ Route::prefix('admin')->name('admin.')->group(function(){
 
                 Route::post('borrow/{id}', [BookPageController::class, 'borrowRequestSend'])->name('borrow.store');
 
+                Route::post('dashboard/data/author', [DashboardController::class, 'fetchDashboardDataAuthor'])->name('dashboard.data.author');
+
+
 
 
 

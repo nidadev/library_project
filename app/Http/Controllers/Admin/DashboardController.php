@@ -32,6 +32,27 @@ class DashboardController extends Controller
         $dashboardData = $this->getDashboardData($request);
         return view('partials.admin.dashboard', $dashboardData)->render();
     }
+    public function searchdata(Request $request) {
+        $search = explode('-',$request->search);
+        $startDate = \Carbon\Carbon::parse($search[0])->format('Y-m-d');
+        $endDate = \Carbon\Carbon::parse($search[1])->format('Y-m-d');
+
+        $listings = Listing::whereBetween('created_at', [$startDate,$endDate])->get();
+
+        return response()->json([
+            'html' => view('listings.search', compact('listings'))->render()
+        ]);
+    }
+    public function fetchDashboardDataAuthor(Request $request)
+    {
+        //dd($request);
+        $userData = User::where('id', $request->author)->get();
+        $bookData = BookPage::where('user_id', $request->author)->get();
+
+        return response()->json([
+            'html' => view('admin.dashboard', compact('userData','bookData'))->render()
+        ]);
+    }
 
     private function getDashboardData(Request $request)
     {
@@ -45,7 +66,7 @@ class DashboardController extends Controller
         //
         $users = User::whereBetween('created_at', [$startDate, $endDate]);
         $books = BookPage::whereBetween('created_at', [$startDate, $endDate])->orWhere('user_id', '=' ,$request->author);
-        $author = BookPage::whereBetween('created_at', [$startDate, $endDate])->distinct()->pluck('user_id');
+        $author = BookPage::distinct()->pluck('user_id');
 
         $release_year = BookPage::whereBetween('created_at', [$startDate, $endDate])->distinct()->pluck('release_year');
 
