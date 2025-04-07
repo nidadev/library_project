@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\Borrow;
 use App\Models\BookPage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
@@ -45,7 +46,7 @@ if($bk)
         return response()->json([
             'success' => 'notcreated',
             'message' => 'not created',
-           
+
         ],);
     }
     }
@@ -137,7 +138,7 @@ if($bk)
     public function deleteBook(Request $request,BookPage $book)
     {
         //dd(str_replace('"','', $request->id));
-        
+
         // if ($book->user_id !== auth()->user()->id || ($request->id !== auth()->user()->id)) {
         //     abort(403, 'Unauthorized action.');
         // }
@@ -168,19 +169,47 @@ if($bk)
         return view('admin.certificates.view', compact('certificate'));
     }
 
-    public function importCsv(Request $request)
+    public function borrowRequest()
     {
-        // Validate File Upload
-        $request->validate([
-            'csv_file' => 'required|max:20480',
-        ]);
+        $borrow = Borrow::where('status', 'applied')->get();
+        return view('admin.bookpage.borrow', compact('borrow'));
 
-        // Import File
-        Excel::import(new CertificateImport(), $request->file('csv_file'));
+    }
 
-        // Flush Session Success Message
-        Session::flash('success', 'Certificate Questions and Answers imported successfully.');
+    public function borrowRequestSend($id)
+    {
+        //dd($id);
+        $borrow = Borrow::find($id);
+        //dd($borrow);
+        $user_id = auth()->user()->id;
+        //get book data
+        $book = BookPage::find($borrow->book_id);
+        //dd($book);
 
-        return response()->json(['success' => true, 'message' => 'Certificate Questions and Answers imported successfully.']);
+        //dd($book);
+        if ($book->quantity >= 1) {
+            //send borrow request
+            $book->quantity = $book->quantity - 1;
+
+           //update book table quantity
+           BookPage::where('id', $book->id)->update(['quantity' => $book->quantity]);
+
+           //update borrow status
+           Borrow::where('id', $borrow->id)->update(['status' => 'approved']);
+
+            //add to table
+            Session::flash('success', 'Borrow request approve');
+
+            return redirect()->route('admin.bookpage.dashboard')->with('success', 'Borrow request approve');
+
+            //dd('add to db');
+        } else {
+            //dd('error');
+            Session::flash('error', 'some error not approved');
+            return redirect()->route('admin.bookpage.dashboard')->with('error', 'Current book not available');
+
+        }
+        //dd($book_id);
+        //dd('borrow post');
     }
 }

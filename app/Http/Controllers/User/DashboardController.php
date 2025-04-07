@@ -1,17 +1,16 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\User;
 
 use Carbon\Carbon;
 use App\Models\User;
-use App\Models\Borrow;
-use App\Models\JobPost;
 use App\Models\BookPage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 
 class DashboardController extends Controller
 {
+    //
     public function dashboard(Request $request)
     {
         //$dashboardData = $this->getDashboardData($request);
@@ -24,13 +23,13 @@ class DashboardController extends Controller
     //     return view('admin.dashboard',compact('users','totalBooks', 'books'));
         $dashboardData = $this->getDashboardData($request);
         //dd($dashboardData);
-        return view('admin.dashboard', $dashboardData);
+        return view('user.dashboard', $dashboardData);
     }
 
     public function fetchDashboardData(Request $request)
     {
         $dashboardData = $this->getDashboardData($request);
-        return view('partials.admin.dashboard', $dashboardData)->render();
+        return view('partials.user.dashboard', $dashboardData)->render();
     }
 
     private function getDashboardData(Request $request)
@@ -42,15 +41,10 @@ class DashboardController extends Controller
         $users = User::whereBetween('created_at', [$startDate, $endDate]);
         $books = BookPage::whereBetween('created_at', [$startDate, $endDate]);
 
-        $borrow = Borrow::whereBetween('created_at', [$startDate, $endDate]);
-
         $totalBooks = (clone $books)->count();
         $totalUsers = (clone $users)->count();
         $userData = (clone $users)->get();
         $bookData = (clone $books)->get();
-
-        $borrowData = (clone $borrow)->get();
-        $totalBorrow = (clone $borrow)->count();
 
 
         // Get applied job IDs
@@ -81,8 +75,6 @@ class DashboardController extends Controller
             'totalBooks',
             'totalUsers',
             'bookData',
-            'borrowData',
-            'totalBorrow'
             // 'jobApplicationsCount',
             // 'shortlisted',
             // 'interviews',
@@ -91,6 +83,5 @@ class DashboardController extends Controller
             // 'recommendedJobs'
         );
     }
-
-
 }
+

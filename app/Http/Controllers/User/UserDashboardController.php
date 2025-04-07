@@ -1,36 +1,37 @@
 <?php
 
-namespace App\Http\Controllers\Admin;
+namespace App\Http\Controllers\User;
 
 use Carbon\Carbon;
 use App\Models\User;
 use App\Models\Borrow;
-use App\Models\JobPost;
 use App\Models\BookPage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use Illuminate\Support\Facades\Session;
 
-class DashboardController extends Controller
+class UserDashboardController extends Controller
 {
+    //
     public function dashboard(Request $request)
     {
         //$dashboardData = $this->getDashboardData($request);
-    //     $users = User::all();
+        //     $users = User::all();
 
-    //     $books = BookPage::with('user')->get();
-    //    //dd($books->id);
-    //     $totalBooks = BookPage::all()->count();
+        //     $books = BookPage::with('user')->get();
+        //    //dd($books->id);
+        //     $totalBooks = BookPage::all()->count();
 
-    //     return view('admin.dashboard',compact('users','totalBooks', 'books'));
+        //     return view('admin.dashboard',compact('users','totalBooks', 'books'));
         $dashboardData = $this->getDashboardData($request);
         //dd($dashboardData);
-        return view('admin.dashboard', $dashboardData);
+        return view('user.dashboard', $dashboardData);
     }
 
     public function fetchDashboardData(Request $request)
     {
         $dashboardData = $this->getDashboardData($request);
-        return view('partials.admin.dashboard', $dashboardData)->render();
+        return view('partials.user.dashboard', $dashboardData)->render();
     }
 
     private function getDashboardData(Request $request)
@@ -40,17 +41,13 @@ class DashboardController extends Controller
 
         //
         $users = User::whereBetween('created_at', [$startDate, $endDate]);
-        $books = BookPage::whereBetween('created_at', [$startDate, $endDate]);
-
-        $borrow = Borrow::whereBetween('created_at', [$startDate, $endDate]);
+        $books = BookPage::with('user')->whereBetween('created_at', [$startDate, $endDate]);
 
         $totalBooks = (clone $books)->count();
         $totalUsers = (clone $users)->count();
         $userData = (clone $users)->get();
         $bookData = (clone $books)->get();
 
-        $borrowData = (clone $borrow)->get();
-        $totalBorrow = (clone $borrow)->count();
 
 
         // Get applied job IDs
@@ -81,8 +78,7 @@ class DashboardController extends Controller
             'totalBooks',
             'totalUsers',
             'bookData',
-            'borrowData',
-            'totalBorrow'
+            'books'
             // 'jobApplicationsCount',
             // 'shortlisted',
             // 'interviews',
@@ -92,5 +88,39 @@ class DashboardController extends Controller
         );
     }
 
+    public function borrowRequest()
+    {
+        dd('111');
+    }
 
+    public function borrowRequestSend($id)
+    {
+        $book = BookPage::find($id);
+        $user_id = auth()->user()->id;
+        //dd($book);
+        if ($book->quantity >= 1) {
+            //send borrow request
+
+            $borrow = Borrow::create([
+                'book_id' => $book->id,
+                'user_id' => $user_id,
+                'status' => 'applied'
+            ]);
+            $borrow->save();
+
+            //add to table
+            Session::flash('success', 'Borrow request send to admin');
+
+            return redirect()->route('user.bookpage.dashboard')->with('success', 'Boorow request send to admin');
+
+            //dd('add to db');
+        } else {
+            //dd('error');
+            Session::flash('error', 'Not available books');
+            return redirect()->route('user.bookpage.dashboard')->with('error', 'Current book not available');
+
+        }
+        //dd($book_id);
+        //dd('borrow post');
+    }
 }

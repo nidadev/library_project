@@ -1,19 +1,14 @@
-<x-admin.layout pageTitle="Dashboard">
+<x-user.layout pageTitle="Dashboard">
     <!-- Date Range -->
+    @if(session()->has('message'))
+    {{ session()->get('message') }}
+    @endif
     <div class="col-xl-12 mx-auto mb-3">
         <div class="d-flex justify-content-between">
             <div>
                 <input class="form-control" placeholder="Pick date range" id="dateRange" />
             </div>
-            <div>
-                <input class="form-control" placeholder="Pick title" id="" />
-            </div>
-            <div>
-                <input class="form-control" placeholder="Pick title" id="" />
-            </div>
-            <div>
-                <input class="form-control" placeholder="Pick title" id="" />
-            </div>
+
         </div>
     </div>
 
@@ -85,7 +80,8 @@
 
     <!-- Dynamic Data Section -->
     <div id="dashboard-content">
-        @include('partials.admin.dashboard', ['users' => $userData ])
+        <?php //dd($bookData); ?>
+        @include('partials.user.dashboard', ['books' => $bookData ])
     </div>
 
     <!-- Job Details Drawer -->
@@ -148,7 +144,7 @@
     @push('scripts')
         <script>
             $(document).ready(function() {
-                alert('')
+                alert('11');
                 // Initialize Date Range Picker
                 var startOfMonth = moment().startOf('month');
                 var endOfMonth = moment().endOf('month');
@@ -261,7 +257,7 @@
                 $("#dashboard-skeleton").removeClass('d-none');
 
                 $.ajax({
-                    url: "{{ route('admin.bookpage.dashboard.data') }}",
+                    url: "{{ route('user.bookpage.dashboard.data') }}",
                     method: "POST",
                     data: {
                         start_date: start,
@@ -353,4 +349,4 @@
             }
         </style>
     @endpush
-</x-admin.layout>
+</x-user.layout>

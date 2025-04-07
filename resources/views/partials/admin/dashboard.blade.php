@@ -1,6 +1,12 @@
+<style>
+    .img_src
+    {
+        width:20%;
+    }
+    </style>
 <div class="row gy-5">
     <!-- States -->
-    
+
     <div class="col-md-3">
         <div class="card text-center">
             <div class="card-header align-items-center justify-content-center">
@@ -17,7 +23,7 @@
                 <h5 class="fs-1 fw-bolder">Borrowed Books </h5>
             </div>
             <div class="card-body">
-                <h2 class="display-3"></h2>
+                <h2 class="display-3">{{ $totalBorrow }}</h2>
             </div>
         </div>
     </div>
@@ -86,25 +92,33 @@
                     <table class="table table-striped" id="recommendedJobsTable">
                         <thead>
                             <tr>
-                                <th> Title</th>
-                                <th>User</th>
+                                <th>Book Title</th>
+                                <th>Book Cover Image</th>
+                                <th>Auther</th>
+                                <th>Release Year</th>
+                                <th>Description</th>
                                 <th>Genres</th>
-                                <th>Action</th>
+                                <th>Pdf</th>
                             </tr>
                         </thead>
                         <tbody>
                             @foreach ($bookData as $bk)
                                 <tr>
                                     <td>{{ $bk->name }}</td>
-                                    <td>{{ $bk->name }}</td>
+                                    <td><img class="img_src" src="{{ asset('storage/' . $bk->file_path) }}" alt=""> </td>
+
+                                    <td>{{ $bk->user->name }}</td>
+
+                                    <td>{{ $bk->release_year }}</td>
                                     <td>{{ $bk->description }}</td>
-                                    <td></td>
+                                    <td>{{ $bk->categories }}</td>
+
                                     <td>
-                                        <button class="btn btn-primary view-job" data-id="{{ $bk->id }}"
+                                        <a class="btn btn-primary" data-id="{{ $bk->id }}"
                                             data-bs-toggle="modal" data-bs-target="#jobDetailModal">
-                                            <i class="fas fa-eye me-1"></i> View
-                                        </button>
-                                       
+                                            <i class="bi bi-eye"></i> View
+                                        </a>
+
                                     </td>
                                 </tr>
                             @endforeach
@@ -115,5 +129,5 @@
         </div>
     </div>
 
-   
+
 </div>

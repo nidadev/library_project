@@ -17,7 +17,7 @@
             <div class="menu menu-column menu-title-gray-800 menu-state-title-primary menu-state-icon-primary menu-state-bullet-primary menu-arrow-white"
                 id="#kt_aside_menu" data-kt-menu="true">
                 <div class="menu-item">
-                    <a class="menu-link gap-3 {{ request()->routeIs('admin.home') ? 'active' : '' }}"
+                    <a class="menu-link gap-3 {{ request()->routeIs('user.home') ? 'active' : '' }}"
                         href="{{ route('admin.home') }}">
                         <span class="menu-bullet">
                             <i class="bi bi-house fs-3 text-white"></i>
@@ -26,8 +26,8 @@
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a class="menu-link gap-3 {{ request()->routeIs('admin.bookpage.dashboard') ? 'active' : '' }}"
-                        href="{{ route('admin.bookpage.dashboard') }}">
+                    <a class="menu-link gap-3 {{ request()->routeIs('user.bookpage.dashboard') ? 'active' : '' }}"
+                        href="{{ route('user.bookpage.dashboard') }}">
                         <span class="menu-bullet">
                             <i class="bi bi-book fs-3 text-white"></i>
                         </span>
@@ -35,8 +35,8 @@
                     </a>
                 </div>
                 <div class="menu-item">
-                    <a class="menu-link gap-3 {{ request()->routeIs('admin.bookpage.index') ? 'active' : '' }}"
-                        href="{{ route('admin.bookpage.index') }}">
+                    <a class="menu-link gap-3 {{ request()->routeIs('user.bookpage.index') ? 'active' : '' }}"
+                        href="{{ route('user.bookpage.index') }}">
                         <span class="menu-bullet">
                             <i class="bi bi-book fs-3 text-white"></i>
                         </span>
@@ -44,19 +44,9 @@
                     </a>
                 </div>
 
-                <div class="menu-item">
-                    <a class="menu-link gap-3 {{ request()->routeIs('admin.bookpage.borrow') ? 'active' : '' }}"
-                        href="{{ route('admin.bookpage.borrow') }}">
-                        <span class="menu-bullet">
-                            <i class="bi bi-book fs-3 text-white"></i>
-                        </span>
-                        <span class="menu-title text-white">Borrow Requests</span>
-                    </a>
-                </div>
-
 
                 <!--div data-kt-menu-trigger="click"
-                    class="menu-item menu-accordion {{ request()->routeIs('admin.home') ? 'show' : '' }}">
+                    class="menu-item menu-accordion {{ request()->routeIs('user.home') ? 'show' : '' }}">
                     <!-- Certificate Parent Menu -->
                     <!--span class="menu-link py-2">
                         <span class="menu-icon">
@@ -68,12 +58,12 @@
                         <span class="menu-arrow text-white"></span>
                     </span>
 
-                    <div class="menu-sub menu-sub-accordion {{ request()->routeIs('admin.home') ? 'show' : '' }}"
+                    <div class="menu-sub menu-sub-accordion {{ request()->routeIs('user.home') ? 'show' : '' }}"
                         kt-hidden-height="163"
-                        style="display: {{ request()->routeIs('admin.home') ? 'block' : 'none' }}; overflow: hidden;">
+                        style="display: {{ request()->routeIs('user.home') ? 'block' : 'none' }}; overflow: hidden;">
                         <div class="menu-item">
-                            <a class="menu-link {{ request()->routeIs('admin.home') ? 'active' : '' }}"
-                                href="{{ route('admin.home') }}">
+                            <a class="menu-link {{ request()->routeIs('user.home') ? 'active' : '' }}"
+                                href="{{ route('user.home') }}">
                                 <span class="menu-icon">
                                     <span class="svg-icon svg-icon-2">
                                         <i class="bi bi-calendar-event fs-3 text-white"></i>

@@ -9,11 +9,11 @@ class BookPage extends Model
 {
     //
     use HasFactory;
-    protected $fillable = ['user_id','name', 'slug', 'categories', 'description', 'file_path', 'file_path_pdf', 'status'];
+    protected $fillable = ['user_id','name', 'quantity', 'slug', 'categories', 'description', 'file_path', 'file_path_pdf', 'status'];
 
 
     public function user()
     {
-        return $this->belongsTo(User::class, 'user_id');
+        return $this->belongsTo(User::class);
     }
 }
