@@ -11,18 +11,19 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use App\Notifications\WishListNotification;
 use Illuminate\Support\Facades\Notification;
+
 class DashboardController extends Controller
 {
     public function dashboard(Request $request)
     {
         //$dashboardData = $this->getDashboardData($request);
-    //     $users = User::all();
+        //     $users = User::all();
 
-    //     $books = BookPage::with('user')->get();
-    //    //dd($books->id);
-    //     $totalBooks = BookPage::all()->count();
+        //     $books = BookPage::with('user')->get();
+        //    //dd($books->id);
+        //     $totalBooks = BookPage::all()->count();
 
-    //     return view('admin.dashboard',compact('users','totalBooks', 'books'));
+        //     return view('admin.dashboard',compact('users','totalBooks', 'books'));
         $dashboardData = $this->getDashboardData($request);
         //dd($dashboardData);
         return view('admin.dashboard', $dashboardData);
@@ -41,7 +42,7 @@ class DashboardController extends Controller
         $bookData = BookPage::where('user_id', $request->author)->get();
 
         return response()->json([
-            'html' => view('admin.dashboard', compact('userData','bookData'))->render()
+            'html' => view('admin.dashboard', compact('userData', 'bookData'))->render()
         ]);
     }
 
@@ -53,61 +54,52 @@ class DashboardController extends Controller
 
         $startDate = $request->start_date;
         $endDate = $request->end_date;
-                $authorReq = $request->author ? $request->author : null;
-                $releaseyear = $request->year ? $request->year : null;
-                $title = $request->title ? $request->title : null;
+        $authorReq = $request->author ? $request->author : null;
+        $releaseyear = $request->year ? $request->year : null;
+        $title = $request->title ? $request->title : null;
 
-                if(isset($authorReq))
-                {
+        if (isset($authorReq)) {
 
-                //
-                $users = User::where('id', $authorReq);
-                $books = BookPage::where('user_id',$authorReq);
-                $borrow = Borrow::where('status','approved')->where('user_id', $authorReq);
-
-                }
-
-                if(isset($request->title))                {
-
-                //
-                $users = User::latest();
-                $books = BookPage::where('name','LIKE',"%a brief%");
-                $borrow = Borrow::where('status','approved');
-
-                }
-
-                if(isset($request->year))
-                {
-
-                //
-                $users = User::latest();
-                $books = BookPage::where('release_year',$request->year);
-                $borrow = Borrow::where('status','approved');
-
-                }
-
-        if($startDate != $endDate)
-        {
-
-        //
-        $users = User::whereBetween('created_at', [$startDate, $endDate]);
-        $books = BookPage::whereBetween('created_at', [$startDate, $endDate]);
-        $borrow = Borrow::where('status','approved')->whereBetween('created_at', [$startDate, $endDate]);
-
+            //
+            $users = User::where('id', $authorReq);
+            $books = BookPage::where('user_id', $authorReq);
+            $borrow = Borrow::where('status', 'approved')->where('user_id', $authorReq);
         }
-        if(!isset($authorReq) && !isset($releaseyear))
-        {
-        $users = User::whereDate('created_at', $startDate);
-        $books = BookPage::whereDate('created_at', $startDate);
-        $borrow = Borrow::where('status','approved');
 
+        if (isset($request->title)) {
+
+            //
+            $users = User::latest();
+            $books = BookPage::where('name', 'LIKE', "%{$request->title}%");
+            $borrow = Borrow::where('status', 'approved');
+        }
+
+        if (isset($request->year)) {
+
+            //
+            $users = User::latest();
+            $books = BookPage::where('release_year', $request->year);
+            $borrow = Borrow::where('status', 'approved');
+        }
+
+        if ($startDate != $endDate) {
+
+            //
+            $users = User::whereBetween('created_at', [$startDate, $endDate]);
+            $books = BookPage::whereBetween('created_at', [$startDate, $endDate]);
+            $borrow = Borrow::where('status', 'approved')->whereBetween('created_at', [$startDate, $endDate]);
+        }
+        if (!isset($authorReq) && !isset($releaseyear) && !isset($title)) {
+            $users = User::whereDate('created_at', $startDate);
+            $books = BookPage::whereDate('created_at', $startDate);
+            $borrow = Borrow::where('status', 'approved');
         }
         $author = BookPage::distinct()->pluck('user_id');
 
         $release_year = BookPage::distinct()->pluck('release_year');
 
 
-//dd($users);
+        //dd($users);
 
 
         $totalBooks = (clone $books)->count();
@@ -138,7 +130,4 @@ class DashboardController extends Controller
             // 'recommendedJobs'
         );
     }
-
-
-
 }

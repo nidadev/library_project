@@ -223,6 +223,38 @@
 
                 $('.js-example-basic-multiple').select2();
 
+                function loadDashboardDataTitle(title) {
+                $("#dashboard-content").hide();
+                $("#dashboard-skeleton").removeClass('d-none');
+
+                $.ajax({
+                    url: "{{ route('user.bookpage.dashboard.data') }}",
+                    method: "POST",
+                    data: {
+                        title: title,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        alert(response);
+                        $("#dashboard-skeleton").addClass('d-none');
+                        $("#dashboard-content").html(response).fadeIn();
+                        initializeDataTables();
+                    },
+                    error: function() {
+                        $("#dashboard-skeleton").removeClass('d-none');
+                        $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                            .fadeIn();
+                    }
+                });
+            }
+            $("#titleSearch").submit(function(event) {
+                //alert('111');
+                    event.preventDefault();
+                    var title = $('#searchTitle').val();
+                    alert(title);
+                    loadDashboardDataTitle(title);
+                });
+
                 $("#applyJobForm").submit(function(event) {
                     event.preventDefault();
                     if (validateApplyJobForm()) {

@@ -49,6 +49,8 @@ class UserDashboardController extends Controller
         // $borrow = Borrow::where('status','applied')->where('user_id',auth()->user()->id)->whereBetween('created_at', [$startDate, $endDate]);
         $authorReq = $request->author ? $request->author : null;
         $releaseyear = $request->year ? $request->year : null;
+        $title = $request->title ? $request->title : null;
+
 
         if (isset($authorReq)) {
             //
@@ -64,7 +66,13 @@ class UserDashboardController extends Controller
             $books = BookPage::where('release_year', $request->year);
             $borrow = Borrow::where('status', 'approved');
         }
+        if (isset($request->title)) {
 
+            //
+            $users = User::latest();
+            $books = BookPage::where('name', 'LIKE', "%{$request->title}%");
+            $borrow = Borrow::where('status', 'approved');
+        }
         if ($startDate != $endDate) {
 
             //
@@ -72,7 +80,7 @@ class UserDashboardController extends Controller
             $books = BookPage::whereBetween('created_at', [$startDate, $endDate]);
             $borrow = Borrow::where('status', 'applied')->whereBetween('created_at', [$startDate, $endDate]);
         }
-        if (!isset($authorReq) && !isset($releaseyear)) {
+        if (!isset($authorReq) && !isset($releaseyear) && !isset($title)) {
             $users = User::whereDate('created_at', $startDate);
             $books = BookPage::whereDate('created_at', $startDate);
             $borrow = Borrow::where('status', 'approved');
