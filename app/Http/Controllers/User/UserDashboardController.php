@@ -82,7 +82,7 @@ class UserDashboardController extends Controller
         }
         if (!isset($authorReq) && !isset($releaseyear) && !isset($title)) {
             $users = User::whereDate('created_at', $startDate);
-            $books = BookPage::whereDate('created_at', $startDate);
+            $books = BookPage::latest();
             $borrow = Borrow::where('status', 'approved');
         }
         $author = BookPage::distinct()->pluck('user_id');
@@ -192,10 +192,11 @@ class UserDashboardController extends Controller
 
                 //BookPage::where('id', $book->id)->update(['wish' => $book->wish]);
 
-                $wishcount = WishList::where('book_id', $book->id)->get();
+                $wishcount = WishList::where(['book_id' => $book->id,
+                'user_id' => auth()->user()->id])->get();
                 //if already exist
                 if ($wishcount->count() > 0) {
-                    WishList::where('book_id', $book->id)->update([
+                    WishList::where(['book_id' => $book->id,'user_id' => auth()->user()->id])->update([
                         'wish' => $wish
                     ]);
                 } else {

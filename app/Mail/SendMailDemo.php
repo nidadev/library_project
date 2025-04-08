@@ -37,7 +37,7 @@ class SendMailDemo extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'view.name',
+            view: 'admin.bookpage.email.testMail',
         );
     }
 
@@ -51,10 +51,8 @@ class SendMailDemo extends Mailable
         return [];
     }
 
-    public function build(): Content
+    public function build()
     {
-        return new Content(
-            view: 'admin.bookpage.email.testMail',
-        );
+        return view('admin.bookpage.email.testMail');
     }
 }

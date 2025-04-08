@@ -256,9 +256,21 @@ if($bk)
 
     public function sendMail()
     {
-        $userEmail = 'nzeeshan@fossphorus.com';
-                dispatch(new SendEmailJob($userEmail));
-                dd('send mail successfully');
+        //get all user from wish list
+$wish_users = WishList::all();
+//dd($wish_users);
+foreach($wish_users as $wu){
+    $uid = $wu->user_id;
+    $findemail = User::find($uid);
+
+    dispatch(new SendEmailJob($findemail));
+}
+// $users = User::find($wish_users[0]['user_id']);
+// dd($users->email);
+//         $userEmail = $users->email;
+
+                // dispatch(new SendEmailJob($userEmail));
+                 dd('send mail successfully');
     }
 
     public function sendWishListToUser($id)

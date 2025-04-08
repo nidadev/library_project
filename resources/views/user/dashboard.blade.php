@@ -235,7 +235,7 @@
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
-                        alert(response);
+                       // alert(response);
                         $("#dashboard-skeleton").addClass('d-none');
                         $("#dashboard-content").html(response).fadeIn();
                         initializeDataTables();
@@ -251,7 +251,7 @@
                 //alert('111');
                     event.preventDefault();
                     var title = $('#searchTitle').val();
-                    alert(title);
+                   // alert(title);
                     loadDashboardDataTitle(title);
                 });
 
@@ -362,9 +362,9 @@ $("#titleSearch").submit(function(event) {
             }
 
             $('#author').change(function(){
-                alert('');
+               // alert('');
                 var author = $('#author').val();
-                alert(author);
+                //alert(author);
                 loadDashboardDataByAuthor(author);
 
             });
@@ -372,7 +372,7 @@ $("#titleSearch").submit(function(event) {
             $('#year').change(function(){
                 //alert('');
                 var year = $('#year').val();
-                alert(year);
+               // alert(year);
                 loadDashboardDataByYear(year);
 
             });
@@ -393,7 +393,7 @@ $("#titleSearch").submit(function(event) {
                     },
                     success: function(response) {
                         //alert(data.author);
-                        alert(response);
+                       // alert(response);
                         $("#dashboard-skeleton").addClass('d-none');
                         $("#dashboard-content").html(response).fadeIn();
                         initializeDataTables();
@@ -407,7 +407,7 @@ $("#titleSearch").submit(function(event) {
             }
 
             function loadDashboardDataByYear(year) {
-                alert(year);
+              //  alert(year);
                 $("#dashboard-content").hide();
                 $("#dashboard-skeleton").removeClass('d-none');
 
@@ -420,7 +420,7 @@ $("#titleSearch").submit(function(event) {
                     },
                     success: function(response) {
                         //alert(data.author);
-                        alert(response);
+                       // alert(response);
                         $("#dashboard-skeleton").addClass('d-none');
                         $("#dashboard-content").html(response).fadeIn();
                         initializeDataTables();

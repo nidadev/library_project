@@ -58,6 +58,7 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
             Route::post('bookavailable/{id}', [BookPageController::class, 'sendWishListToUser'])->name('bookavailable.store');
+            Route::get('send-mail', [BookPageController::class, 'sendMail'])->name('send-mail');
 
             Route::post('send-mail', [BookPageController::class, 'sendMail'])->name('send-mail');
 

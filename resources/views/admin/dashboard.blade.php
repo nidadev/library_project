@@ -183,7 +183,7 @@
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
-                        alert(response);
+                        //alert(response);
                         $("#dashboard-skeleton").addClass('d-none');
                         $("#dashboard-content").html(response).fadeIn();
                         initializeDataTables();
@@ -196,10 +196,10 @@
                 });
             }
             $("#titleSearch").submit(function(event) {
-                alert('111');
+                //alert('111');
                     event.preventDefault();
                     var title = $('#searchTitle').val();
-                    alert(title);
+                   // alert(title);
                     loadDashboardDataTitle(title);
                 });
 
@@ -213,7 +213,7 @@
             }
 
             function loadDashboardData(start, end) {
-            alert(start,end);
+           // alert(start,end);
                 $("#dashboard-content").hide();
                 $("#dashboard-skeleton").removeClass('d-none');
 
@@ -226,7 +226,7 @@
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
-                        alert(response);
+                      //  alert(response);
                         $("#dashboard-skeleton").addClass('d-none');
                         $("#dashboard-content").html(response).fadeIn();
                         initializeDataTables();
@@ -241,9 +241,9 @@
 
 
             $('#author').change(function(){
-                alert('');
+               // alert('');
                 var author = $('#author').val();
-                alert(author);
+               // alert(author);
                 loadDashboardDataByAuthor(author);
 
             });
@@ -251,13 +251,13 @@
             $('#year').change(function(){
                 //alert('');
                 var year = $('#year').val();
-                alert(year);
+               // alert(year);
                 loadDashboardDataByYear(year);
 
             });
 
             $('#genre').change(function(){
-                alert('');
+               // alert('');
                 //var year = $('#year').val();
                 //alert(year);
                 //loadDashboardDataByYear(year);
@@ -280,7 +280,7 @@
                     },
                     success: function(response) {
                         //alert(data.author);
-                        alert(response);
+                        //alert(response);
                         $("#dashboard-skeleton").addClass('d-none');
                         $("#dashboard-content").html(response).fadeIn();
                         initializeDataTables();
@@ -294,7 +294,7 @@
             }
 
             function loadDashboardDataByYear(year) {
-                alert(year);
+                //alert(year);
                 $("#dashboard-content").hide();
                 $("#dashboard-skeleton").removeClass('d-none');
 
@@ -307,7 +307,7 @@
                     },
                     success: function(response) {
                         //alert(data.author);
-                        alert(response);
+                       // alert(response);
                         $("#dashboard-skeleton").addClass('d-none');
                         $("#dashboard-content").html(response).fadeIn();
                         initializeDataTables();

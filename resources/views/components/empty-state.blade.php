@@ -7,7 +7,7 @@
     'modalTarget' => null,
 ])
 <div class="text-center py-5">
-    <img src="{{ asset($image) }}" alt="{{ $title }}" width="150">
+    <!--img src="{{ asset('admin_assets/images/empty.svg') }}" alt="{{ $title }}" width="150"-->
     <h4 class="mt-3">{{ $title }}</h4>
     <p>{{ $message }}</p>
 
