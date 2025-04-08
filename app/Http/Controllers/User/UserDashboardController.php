@@ -188,11 +188,7 @@ class UserDashboardController extends Controller
                 $wish = Wishlist::where('user_id', auth()->user()->id)->pluck('wish');
                 $wish = $wish[0] ? $wish[0] : 0;
                 $wish += 1;
-                //$book->wish = $wish;
-                // dd($book->id);
-                //update borrow status
 
-                //BookPage::where('id', $book->id)->update(['wish' => $book->wish]);
 
                 $wishcount = WishList::where(['book_id' => $book->id,
                 'user_id' => auth()->user()->id])->get();
