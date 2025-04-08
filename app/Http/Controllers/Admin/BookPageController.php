@@ -2,13 +2,18 @@
 
 namespace App\Http\Controllers\Admin;
 
+use App\Models\User;
 use App\Models\Borrow;
 use App\Models\BookPage;
+use App\Models\WishList;
+use App\Jobs\SendEmailJob;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
-use App\Http\Requests\BookPageRequest;
 use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
+use App\Notifications\WishListNotification;
+use Illuminate\Support\Facades\Notification;
+
 
 class BookPageController extends Controller
 {
@@ -239,7 +244,57 @@ if($bk)
 
     }
 }
+
+
         //dd($book_id);
         //dd('borrow post');
     }
+    public function bookavailableRequest()
+    {
+        dd('111');
+    }
+
+    public function sendMail()
+    {
+        $userEmail = 'nzeeshan@fossphorus.com';
+                dispatch(new SendEmailJob($userEmail));
+                dd('send mail successfully');
+    }
+
+    public function sendWishListToUser($id)
+    {
+        dd('111');
+
+        //if(isset($request->approve))
+        //{
+        /*if ($book->quantity <= 0) {
+            //send borrow request
+            $book->quantity = 50;
+
+           //update book table quantity
+           //take wish list user id and book_id
+           //
+           $wish_user = WishList::where('book_id', $book->id)->get();
+           $user = User::first($wish_user->user_id);
+
+           BookPage::where('id', $book->id)->update(['quantity' => $book->quantity]);
+
+
+ Notification::send($user, new WishListNotification);
+        //dd('done');
+            //add to table
+            Session::flash('success', 'Send Notification to user');
+
+            return redirect()->route('admin.bookpage.dashboard')->with('success', 'Send Notification to user');
+
+            //dd('add to db');
+        } else {
+            //dd('error');
+            Session::flash('error', 'some error not approved');
+            return redirect()->route('admin.bookpage.dashboard')->with('error', 'Current book not available');
+
+        }*/
+
+    //}
+}
 }

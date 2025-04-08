@@ -8,6 +8,7 @@ use App\Models\Borrow;
 use App\Models\BookPage;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use App\Models\WishList;
 use Illuminate\Support\Facades\Session;
 
 class UserDashboardController extends Controller
@@ -36,17 +37,51 @@ class UserDashboardController extends Controller
 
     private function getDashboardData(Request $request)
     {
-        $startDate = $request->start_date ? Carbon::parse($request->start_date) : now()->startOfMonth();
-        $endDate = $request->end_date ? Carbon::parse($request->end_date) : now()->endOfMonth();
+        // $startDate = $request->start_date ? Carbon::parse($request->start_date) : now()->startOfMonth();
+        // $endDate = $request->end_date ? Carbon::parse($request->end_date) : now()->endOfMonth();
 
+        $startDate = $request->start_date;
+        $endDate = $request->end_date;
         //
-        $users = User::whereBetween('created_at', [$startDate, $endDate]);
-        $books = BookPage::with('user')->whereBetween('created_at', [$startDate, $endDate]);
+        // $users = User::whereBetween('created_at', [$startDate, $endDate]);
+        // $books = BookPage::with('user')->whereBetween('created_at', [$startDate, $endDate]);
 
-        $borrow = Borrow::where('status','applied')->where('user_id',auth()->user()->id)->whereBetween('created_at', [$startDate, $endDate]);
+        // $borrow = Borrow::where('status','applied')->where('user_id',auth()->user()->id)->whereBetween('created_at', [$startDate, $endDate]);
+        $authorReq = $request->author ? $request->author : null;
+        $releaseyear = $request->year ? $request->year : null;
 
+        if (isset($authorReq)) {
+            //
+            $users = User::where('id', $authorReq);
+            $books = BookPage::where('user_id', $authorReq);
+            $borrow = Borrow::where('status', 'approved')->where('user_id', $authorReq);
+        }
+
+        if (isset($request->year)) {
+
+            //
+            $users = User::latest();
+            $books = BookPage::where('release_year', $request->year);
+            $borrow = Borrow::where('status', 'approved');
+        }
+
+        if ($startDate != $endDate) {
+
+            //
+            $users = User::whereBetween('created_at', [$startDate, $endDate]);
+            $books = BookPage::whereBetween('created_at', [$startDate, $endDate]);
+            $borrow = Borrow::where('status', 'applied')->whereBetween('created_at', [$startDate, $endDate]);
+        }
+        if (!isset($authorReq) && !isset($releaseyear)) {
+            $users = User::whereDate('created_at', $startDate);
+            $books = BookPage::whereDate('created_at', $startDate);
+            $borrow = Borrow::where('status', 'approved');
+        }
+        $author = BookPage::distinct()->pluck('user_id');
+
+        $release_year = BookPage::distinct()->pluck('release_year');
         $borrowData = (clone $borrow)->get();
-        $wish = BookPage::where('user_id', auth()->user()->id)->whereBetween('created_at', [$startDate, $endDate])->pluck('wish');
+        $wish = WishList::where('user_id', auth()->user()->id)->pluck('wish');
 
         $totalBooks = (clone $books)->count();
         $totalUsers = (clone $users)->count();
@@ -55,8 +90,6 @@ class UserDashboardController extends Controller
         $totalBorrow = (clone $borrow)->count();
 
         $totalWish = (clone $wish)->count();
-
-
 
 
         // Get applied job IDs
@@ -90,7 +123,9 @@ class UserDashboardController extends Controller
             'books',
             'borrowData',
             'totalBorrow',
-            'totalWish'
+            'totalWish',
+            'author',
+            'release_year'
             // 'jobApplicationsCount',
             // 'shortlisted',
             // 'interviews',
@@ -105,72 +140,85 @@ class UserDashboardController extends Controller
         dd('111');
     }
 
-    public function borrowRequestSend($id,Request $request)
+    public function borrowRequestSend($id, Request $request)
     {
         //dd($request);
         $book = BookPage::find($id);
         $user_id = auth()->user()->id;
-        if(isset($request->borrow))
-        {
+        if (isset($request->borrow)) {
 
-        //dd($book);
-        if ($book->quantity >= 1) {
-            //send borrow request
+            //dd($book);
+            if ($book->quantity >= 1) {
+                //send borrow request
 
-            $borrow = Borrow::create([
-                'book_id' => $book->id,
-                'user_id' => $user_id,
-                'status' => 'applied'
-            ]);
-            $borrow->save();
+                $borrow = Borrow::create([
+                    'book_id' => $book->id,
+                    'user_id' => $user_id,
+                    'status' => 'applied'
+                ]);
+                $borrow->save();
 
-            //add to table
-            Session::flash('success', 'Borrow request send to admin');
+                //add to table
+                Session::flash('success', 'Borrow request send to admin');
 
-            return redirect()->route('user.bookpage.dashboard')->with('success', 'Boorow request send to admin');
+                return redirect()->route('user.bookpage.dashboard')->with('success', 'Boorow request send to admin');
 
-            //dd('add to db');
-        } else {
-            //dd('error');
-            Session::flash('error', 'Not available books');
-            return redirect()->route('user.bookpage.dashboard')->with('error', 'Current book not available');
-
+                //dd('add to db');
+            } else {
+                //dd('error');
+                Session::flash('error', 'Not available books');
+                return redirect()->route('user.bookpage.dashboard')->with('error', 'Current book not available');
+            }
         }
-    }
         //dd($book);
-        if(isset($request->wish))
-        {
-//dd($book);
+        if (isset($request->wish)) {
+            //dd($book);
 
-        if ($book->quantity <= 0) {
-            //send borrow request
- $wish = $book->wish ? $book->wish : 0;
-           $wish += 1;
-           $book->wish = $wish;
-          // dd($book->id);
-           //update borrow status
-           BookPage::where('id', $book->id)->update(['wish' => $book->wish]);
+            if ($book->quantity <= 0) {
+                //send borrow request
+                $wish = $book->wish ? $book->wish : 0;
+                $wish += 1;
+                $book->wish = $wish;
+                // dd($book->id);
+                //update borrow status
 
-            //add to table
-            Session::flash('success', 'Wish request send');
+                //BookPage::where('id', $book->id)->update(['wish' => $book->wish]);
 
-            return redirect()->route('user.bookpage.dashboard')->with('success', 'Wish request send');
+                $wishcount = WishList::where('book_id', $book->id)->get();
+                //if already exist
+                if ($wishcount->count() > 0) {
+                    WishList::where('book_id', $book->id)->update([
+                        'wish' => $wish
+                    ]);
+                } else {
+                    //insert into wish list
+                    WishList::create([
+                        'user_id' => auth()->user()->id,
+                        'book_id' => $book->id,
+                        'wish' => $wish
+                    ]);
+                }
 
-            //dd('add to db');
-        } else {
-            //dd('error');
-            Session::flash('error', 'some error not approved');
-            return redirect()->route('user.bookpage.dashboard')->with('error', 'some error');
 
+                //add to table
+                Session::flash('success', 'Wish request send');
+
+                return redirect()->route('user.bookpage.dashboard')->with('success', 'Wish request send');
+
+                //dd('add to db');
+            } else {
+                //dd('error');
+                Session::flash('error', 'some error not approved');
+                return redirect()->route('user.bookpage.dashboard')->with('error', 'some error');
+            }
         }
-    }
         //dd($book_id);
         //dd('borrow post');
     }
     public function borrowHistory()
     {
-//dd('111');
-$borrowhistory = Borrow::latest()->where('user_id', auth()->user()->id)->get();
-return view('user.bookpage.history', compact('borrowhistory'));
+        //dd('111');
+        $borrowhistory = Borrow::latest()->where('user_id', auth()->user()->id)->get();
+        return view('user.bookpage.history', compact('borrowhistory'));
     }
 }

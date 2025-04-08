@@ -8,6 +8,29 @@
             <div>
                 <input class="form-control" placeholder="Pick date range" id="dateRange" />
             </div>
+            <div>
+                <!--input class="form-control" placeholder="Pick Author" id="author" /-->
+                <select class="form-select" id="author" aria-label="Default select example">
+                    <option selected>Select</option>
+                    @foreach($author as $at)
+                    <?php //dd($author) ?>
+                    <option value="{{ $at }}">Admin</option>
+                    @endforeach
+                  </select>
+            </div>
+            <div>
+                <input class="form-control" placeholder="Pick Genre" id="genre" />
+            </div>
+            <div>
+                <select class="form-select" id="year" aria-label="Default select example">
+                    <option selected>Select</option>
+                    @foreach($release_year as $release_year)
+                    <?php //dd($author) ?>
+                    <option value="{{ $release_year }}">{{ $release_year }}</option>
+
+                    @endforeach
+                  </select>
+            </div>
 
         </div>
     </div>
@@ -278,45 +301,78 @@
                 });
             }
 
-            function validateApplyJobForm() {
-                var isValid = true;
+            $('#author').change(function(){
+                alert('');
+                var author = $('#author').val();
+                alert(author);
+                loadDashboardDataByAuthor(author);
 
-                var allowedResumeTypes = ["application/pdf", "application/msword",
-                    "application/vnd.openxmlformats-officedocument.wordprocessingml.document"
-                ];
-                var maxSize = 20 * 1024 * 1024; // 20MB
+            });
 
-                // Clear previous errors
-                $(".is-invalid").removeClass("is-invalid");
-                $(".fv-plugins-message-container").empty().hide();
+            $('#year').change(function(){
+                //alert('');
+                var year = $('#year').val();
+                alert(year);
+                loadDashboardDataByYear(year);
 
-                var resumeSelection = $('#resumes').val();
-                var resumeFile = $('#new_resume')[0].files[0];
+            });
 
-                // Step 1: Check if a resume is selected
-                if (!resumeSelection) {
-                    $('#resumes').addClass('is-invalid').closest('.fv-row')
-                        .find('.fv-plugins-message-container').text('Resume is required.').show();
-                    isValid = false;
-                } else if (resumeSelection === "new") {
-                    // Step 2: Validate new resume upload
-                    if (!resumeFile) {
-                        $('#new_resume').addClass('is-invalid').closest('.fv-row')
-                            .find('.fv-plugins-message-container').text('Please upload a resume.').show();
-                        isValid = false;
-                    } else if (resumeFile.size > maxSize) {
-                        $('#new_resume').addClass('is-invalid').closest('.fv-row')
-                            .find('.fv-plugins-message-container').text('Resume file should not exceed 20 MB.').show();
-                        isValid = false;
-                    } else if (!allowedResumeTypes.includes(resumeFile.type)) {
-                        $('#new_resume').addClass('is-invalid').closest('.fv-row')
-                            .find('.fv-plugins-message-container').text('Only PDF, DOC, and DOCX files are allowed.').show();
-                        isValid = false;
+
+
+            function loadDashboardDataByAuthor(author) {
+                //alert(author);
+                $("#dashboard-content").hide();
+                $("#dashboard-skeleton").removeClass('d-none');
+
+                $.ajax({
+                    url: "{{ route('user.bookpage.dashboard.data') }}",
+                    method: "POST",
+                    data: {
+                        author: author,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        //alert(data.author);
+                        alert(response);
+                        $("#dashboard-skeleton").addClass('d-none');
+                        $("#dashboard-content").html(response).fadeIn();
+                        initializeDataTables();
+                    },
+                    error: function() {
+                        $("#dashboard-skeleton").removeClass('d-none');
+                        $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                            .fadeIn();
                     }
-                }
-
-                return isValid;
+                });
             }
+
+            function loadDashboardDataByYear(year) {
+                alert(year);
+                $("#dashboard-content").hide();
+                $("#dashboard-skeleton").removeClass('d-none');
+
+                $.ajax({
+                    url: "{{ route('user.bookpage.dashboard.data') }}",
+                    method: "POST",
+                    data: {
+                        year: year,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        //alert(data.author);
+                        alert(response);
+                        $("#dashboard-skeleton").addClass('d-none');
+                        $("#dashboard-content").html(response).fadeIn();
+                        initializeDataTables();
+                    },
+                    error: function() {
+                        $("#dashboard-skeleton").removeClass('d-none');
+                        $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                            .fadeIn();
+                    }
+                });
+            }
+
         </script>
     @endpush
 
