@@ -1,3 +1,10 @@
+<style>
+    .tag
+    {
+        width:150px !important;
+        background: #fff !important;
+    }
+    </style>
 <x-user.layout pageTitle="Dashboard">
     <!-- Date Range -->
     @if(session()->has('message'))
@@ -9,7 +16,6 @@
                 <input class="form-control" placeholder="Pick date range" id="dateRange" />
             </div>
             <div>
-                <!--input class="form-control" placeholder="Pick Author" id="author" /-->
                 <select class="form-select" id="author" aria-label="Default select example">
                     <option selected>Select</option>
                     @foreach($author as $at)
@@ -19,7 +25,13 @@
                   </select>
             </div>
             <div>
-                <input class="form-control" placeholder="Pick Genre" id="genre" />
+                <!--input class="form-control" placeholder="Pick Genre" id="genre" /-->
+                <select class="form-control tag js-example-basic-multiple" name="states[]" multiple="multiple" id="genre">
+                    <option value="movies">movies</option>
+                    <option value="test">test</option>
+                    <option value="red">red</option>
+
+                  </select>
             </div>
             <div>
                 <select class="form-select" id="year" aria-label="Default select example">
@@ -30,6 +42,13 @@
 
                     @endforeach
                   </select>
+            </div>
+            <div>
+                <form method="POST" action="#" id="titleSearch">
+                    @csrf
+                <input type="text" name="search" class="form-control" id="searchTitle" />
+                <input type="submit" name="submit" class="btn btn-primary form-control">
+                </form>
             </div>
 
         </div>
@@ -202,30 +221,7 @@
                     $('#applyJobError').empty();
                 });
 
-                // $(document).on("click", ".view-job", function() {
-                //     let jobId = $(this).data("id");
-                //     $("#jobDetailsContent").html("<p class='text-center'>Loading...</p>");
-
-                //     $.post("{{ route('admin.bookpage.index') }}", {
-                //         job_id: jobId,
-                //         _token: "{{ csrf_token() }}"
-                //     }, function(response) {
-                //         $("#jobDetailsContent").empty().html(response);
-
-                //         // Open the drawer after content is loaded
-                //         const drawerElement = document.querySelector("#jobDetailDrawer");
-                //         if (drawerElement) {
-                //             const drawerInstance = KTDrawer.getInstance(drawerElement);
-                //             if (drawerInstance) {
-                //                 drawerInstance.show();
-                //             }
-                //         }
-                //     });
-                // });
-
-                $(document).on("click", ".apply-now", function() {
-                    $("#jobId").val($(this).data("id"));
-                });
+                $('.js-example-basic-multiple').select2();
 
                 $("#applyJobForm").submit(function(event) {
                     event.preventDefault();
@@ -267,6 +263,38 @@
                 });
             });
 
+
+
+$("#titleSearch").submit(function(event) {
+                    event.preventDefault();
+                    var title = $('#searchTitle').val();
+                    loadDashboardDataTitle(title);
+                });
+
+                function loadDashboardDataTitle(title) {
+                $("#dashboard-content").hide();
+                $("#dashboard-skeleton").removeClass('d-none');
+
+                $.ajax({
+                    url: "{{ route('user.bookpage.dashboard.data') }}",
+                    method: "POST",
+                    data: {
+                        title: title,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        //alert(response);
+                        $("#dashboard-skeleton").addClass('d-none');
+                        $("#dashboard-content").html(response).fadeIn();
+                        initializeDataTables();
+                    },
+                    error: function() {
+                        $("#dashboard-skeleton").removeClass('d-none');
+                        $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                            .fadeIn();
+                    }
+                });
+            }
             // Function to initialize DataTables
             function initializeDataTables() {
                 $('#appliedJobsTable','#recommendedJobsTable').DataTable({

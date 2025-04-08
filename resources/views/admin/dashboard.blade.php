@@ -1,3 +1,10 @@
+<style>
+    .tag
+    {
+        width:150px !important;
+        background: #fff !important;
+    }
+    </style>
 <x-admin.layout pageTitle="Dashboard">
     <!-- Date Range -->
     <div class="col-xl-12 mx-auto mb-3">
@@ -17,8 +24,15 @@
                   </select>
             </div>
             <div>
-                <input class="form-control" placeholder="Pick Genre" id="genre" />
+                <!--input class="form-control" placeholder="Pick Genre" id="genre" /-->
+                 <select class="form-control tag js-example-basic-multiple" name="states[]" multiple="multiple" id="genre">
+                <option value="movies">movies</option>
+                <option value="test">test</option>
+                <option value="red">red</option>
+
+              </select>
             </div>
+
             <div>
                 <select class="form-select" id="year" aria-label="Default select example">
                     <option selected>Select</option>
@@ -30,8 +44,11 @@
                   </select>
             </div>
             <div>
-                <input type="text" name="search" class="form-control"/>
+                <form method="POST" action="#" id="titleSearch">
+                    @csrf
+                <input type="text" name="search" class="form-control" id="searchTitle" />
                 <input type="submit" name="submit" class="btn btn-primary form-control">
+                </form>
             </div>
 
         </div>
@@ -125,6 +142,8 @@
     @push('scripts')
         <script>
             $(document).ready(function() {
+
+                $('.js-example-basic-multiple').select2();
                 //alert('')
                 // Initialize Date Range Picker
                 var startOfMonth = moment().startOf('month');
@@ -151,6 +170,39 @@
 
 
             });
+
+            function loadDashboardDataTitle(title) {
+                $("#dashboard-content").hide();
+                $("#dashboard-skeleton").removeClass('d-none');
+
+                $.ajax({
+                    url: "{{ route('admin.bookpage.dashboard.data') }}",
+                    method: "POST",
+                    data: {
+                        title: title,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        alert(response);
+                        $("#dashboard-skeleton").addClass('d-none');
+                        $("#dashboard-content").html(response).fadeIn();
+                        initializeDataTables();
+                    },
+                    error: function() {
+                        $("#dashboard-skeleton").removeClass('d-none');
+                        $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                            .fadeIn();
+                    }
+                });
+            }
+            $("#titleSearch").submit(function(event) {
+                alert('111');
+                    event.preventDefault();
+                    var title = $('#searchTitle').val();
+                    alert(title);
+                    loadDashboardDataTitle(title);
+                });
+
 
             // Function to initialize DataTables
             function initializeDataTables() {
@@ -201,6 +253,14 @@
                 var year = $('#year').val();
                 alert(year);
                 loadDashboardDataByYear(year);
+
+            });
+
+            $('#genre').change(function(){
+                alert('');
+                //var year = $('#year').val();
+                //alert(year);
+                //loadDashboardDataByYear(year);
 
             });
 

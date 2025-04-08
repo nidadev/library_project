@@ -89,7 +89,7 @@
             <div class="px-3 py-1">
                 @if ($bookData->isEmpty())
                 <?php //dd($bookData);?>
-                    <x-empty-state title="No Recommended Jobs" message="No recommended jobs available at the moment." />
+                    <x-empty-state title="No Books" message="No books available at the moment." />
                 @else
                     <table class="table table-striped" id="booksTable">
                         <thead>
@@ -130,7 +130,7 @@
                                     </td>
                                 </tr>
 
-<!----------- Borrow Request -->
+<!----------- Borrow Request ->
 <div class="modal fade" id="bookavailableModal_{{ $bk->id }}" tabindex="-1"
     aria-labelledby="statusModalLabel" aria-hidden="true"
     data-bs-backdrop="static">

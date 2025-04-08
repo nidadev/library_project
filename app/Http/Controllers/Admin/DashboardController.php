@@ -55,6 +55,7 @@ class DashboardController extends Controller
         $endDate = $request->end_date;
                 $authorReq = $request->author ? $request->author : null;
                 $releaseyear = $request->year ? $request->year : null;
+                $title = $request->title ? $request->title : null;
 
                 if(isset($authorReq))
                 {
@@ -63,6 +64,15 @@ class DashboardController extends Controller
                 $users = User::where('id', $authorReq);
                 $books = BookPage::where('user_id',$authorReq);
                 $borrow = Borrow::where('status','approved')->where('user_id', $authorReq);
+
+                }
+
+                if(isset($request->title))                {
+
+                //
+                $users = User::latest();
+                $books = BookPage::where('name','LIKE',"%a brief%");
+                $borrow = Borrow::where('status','approved');
 
                 }
 
