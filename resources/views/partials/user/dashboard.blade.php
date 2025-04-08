@@ -51,6 +51,7 @@
                         <tbody>
                             <div class="row gy-5">
                                 @foreach ($bookData as $bk)
+                                <?php //dd($bookData);?>
                                 <div class="col-md-3">
                                     <div class="card text-center">
                                         <div class="card-header align-items-center justify-content-center">

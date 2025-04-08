@@ -45,6 +45,7 @@
             </div>
             <div class="px-3 py-1">
                 @if ($userData->isEmpty())
+                <?php //dd($userData)?>
                     <x-empty-state title="No Users" message="You have no users yet." />
                 @else
                     <table class="table table-striped" id="usersTable">
@@ -87,6 +88,7 @@
             </div>
             <div class="px-3 py-1">
                 @if ($bookData->isEmpty())
+                <?php //dd($bookData);?>
                     <x-empty-state title="No Recommended Jobs" message="No recommended jobs available at the moment." />
                 @else
                     <table class="table table-striped" id="booksTable">

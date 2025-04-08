@@ -105,7 +105,7 @@
 
     <!-- Dynamic Data Section -->
     <div id="dashboard-content">
-        @include('partials.admin.dashboard', ['users' => $userData ])
+        @include('partials.admin.dashboard', ['users' => $userData, 'bookData' => $bookData ])
     </div>
 
     <!-- Job Details Drawer -->
@@ -196,19 +196,55 @@
 
             });
 
-            function loadDashboardDataByAuthor() {
-                alert(author);
+            $('#year').change(function(){
+                //alert('');
+                var year = $('#year').val();
+                alert(year);
+                loadDashboardDataByYear(year);
+
+            });
+
+            function loadDashboardDataByAuthor(author) {
+                //alert(author);
                 $("#dashboard-content").hide();
                 $("#dashboard-skeleton").removeClass('d-none');
 
                 $.ajax({
-                    url: "{{ route('admin.bookpage.dashboard.data.author') }}",
+                    url: "{{ route('admin.bookpage.dashboard.data') }}",
                     method: "POST",
                     data: {
                         author: author,
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
+                        //alert(data.author);
+                        alert(response);
+                        $("#dashboard-skeleton").addClass('d-none');
+                        $("#dashboard-content").html(response).fadeIn();
+                        initializeDataTables();
+                    },
+                    error: function() {
+                        $("#dashboard-skeleton").removeClass('d-none');
+                        $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                            .fadeIn();
+                    }
+                });
+            }
+
+            function loadDashboardDataByYear(year) {
+                alert(year);
+                $("#dashboard-content").hide();
+                $("#dashboard-skeleton").removeClass('d-none');
+
+                $.ajax({
+                    url: "{{ route('admin.bookpage.dashboard.data') }}",
+                    method: "POST",
+                    data: {
+                        year: year,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        //alert(data.author);
                         alert(response);
                         $("#dashboard-skeleton").addClass('d-none');
                         $("#dashboard-content").html(response).fadeIn();

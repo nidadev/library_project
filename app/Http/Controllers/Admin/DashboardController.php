@@ -62,21 +62,55 @@ class DashboardController extends Controller
 
         $startDate = $request->start_date;
         $endDate = $request->end_date;
+                $authorReq = $request->author ? $request->author : null;
+                $releaseyear = $request->year ? $request->year : null;
+
+                if(isset($authorReq))
+                {
+        
+                //
+                $users = User::where('id', $authorReq);
+                $books = BookPage::where('user_id',$authorReq);
+                $borrow = Borrow::where('status','approved')->where('user_id', $authorReq);
+        
+                }
+
+                if(isset($request->year))
+                {
+        
+                //
+                $users = User::latest();
+                $books = BookPage::where('release_year',$request->year);
+                $borrow = Borrow::where('status','approved');
+        
+                }
+
+        if($startDate != $endDate)
+        {
 
         //
         $users = User::whereBetween('created_at', [$startDate, $endDate]);
-        $books = BookPage::whereBetween('created_at', [$startDate, $endDate])->orWhere('user_id', '=' ,$request->author);
+        $books = BookPage::whereBetween('created_at', [$startDate, $endDate]);
+        $borrow = Borrow::where('status','approved')->whereBetween('created_at', [$startDate, $endDate]);
+
+        }
+        if(!isset($authorReq) && !isset($releaseyear))
+        {
+        $users = User::whereDate('created_at', $startDate);
+        $books = BookPage::whereDate('created_at', $startDate);
+        $borrow = Borrow::where('status','approved');
+
+        }
         $author = BookPage::distinct()->pluck('user_id');
 
-        $release_year = BookPage::whereBetween('created_at', [$startDate, $endDate])->distinct()->pluck('release_year');
+        $release_year = BookPage::distinct()->pluck('release_year');
 
-        //$authorReq = $request->author ? $request->author : null;
 
 //dd($users);
 
-        $borrow = Borrow::where('status','applied')->whereBetween('created_at', [$startDate, $endDate]);
 
         $totalBooks = (clone $books)->count();
+
         $totalUsers = (clone $users)->count();
         $userData = (clone $users)->get();
         $bookData = (clone $books)->get();
