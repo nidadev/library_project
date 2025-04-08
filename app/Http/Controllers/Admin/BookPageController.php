@@ -13,6 +13,7 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\WishListNotification;
 use Illuminate\Support\Facades\Notification;
+use Mail;
 
 
 class BookPageController extends Controller
@@ -257,20 +258,53 @@ if($bk)
     public function sendMail()
     {
         //get all user from wish list
-$wish_users = WishList::all();
-//dd($wish_users);
-foreach($wish_users as $wu){
-    $uid = $wu->user_id;
-    $findemail = User::find($uid);
+// $wish_users = WishList::all();
+// //dd($wish_users);
+// foreach($wish_users as $wu){
+//     $uid = $wu->user_id;
+//     $findemail = User::find($uid);
 
-    dispatch(new SendEmailJob($findemail));
-}
+//     dispatch(new SendEmailJob($findemail));
+// }
 // $users = User::find($wish_users[0]['user_id']);
 // dd($users->email);
 //         $userEmail = $users->email;
 
                 // dispatch(new SendEmailJob($userEmail));
-                 dd('send mail successfully');
+
+                $wish_users = WishList::select('user_id')->get();
+                //dd($wish_users);
+                foreach($wish_users as $wu){
+                    $userids[] = $wu->user_id;
+                    $users = User::whereIn("id",$userids)->get();
+                    //dd($users[0]);
+                    foreach ($users as $key => $user) {
+
+                        //     Mail::to($user->email)->send(new UserEmail($user));
+                        Mail::to($user->email)->send();
+
+
+                         }
+                    //  $uid = $wu->user_id;
+                    //     $findemail = User::find($uid);
+
+                    //     dispatch(new SendEmailJob($findemail));
+                     }
+
+                //$users = User::whereIn("id", $request->ids)->get();
+
+
+
+                // foreach ($users as $key => $user) {
+
+                //     Mail::to($user->email)->send(new UserEmail($user));
+
+                // }
+
+
+
+                // return response()->json(['success'=>'Send email successfully.']);
+                //  dd('send mail successfully');
     }
 
     public function sendWishListToUser($id)

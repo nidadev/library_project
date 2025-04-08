@@ -30,7 +30,7 @@ class SendMail extends Command
     public function handle()
     {
         //
-        $wish_users = WishList::all();
+
 
         Mail::to('nzeeshan@fossphorus.com')->send();
         //dd($wish_users);
@@ -45,6 +45,6 @@ class SendMail extends Command
         //         $userEmail = $users->email;
 
         // dispatch(new SendEmailJob($userEmail));
-        dd('send mail successfully');
+        //dd('send mail successfully');
     }
 }

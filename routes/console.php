@@ -9,4 +9,4 @@ Artisan::command('inspire', function () {
     $this->comment(Inspiring::quote());
 })->purpose('Display an inspiring quote');
 
-Schedule::command('users:send-mail')->monthly();
+Schedule::command('users:send-mail')->hourly();

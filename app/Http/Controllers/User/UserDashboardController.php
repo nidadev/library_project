@@ -64,14 +64,14 @@ class UserDashboardController extends Controller
             //
             $users = User::latest();
             $books = BookPage::where('release_year', $request->year);
-            $borrow = Borrow::where('status', 'approved');
+            $borrow = Borrow::where('status', 'approved')->where('user_id', auth()->user()->id);
         }
         if (isset($request->title)) {
 
             //
             $users = User::latest();
             $books = BookPage::where('name', 'LIKE', "%{$request->title}%");
-            $borrow = Borrow::where('status', 'approved');
+            $borrow = Borrow::where('status', 'approved')->where('user_id', auth()->user()->id);
         }
         if ($startDate != $endDate) {
 
@@ -83,13 +83,14 @@ class UserDashboardController extends Controller
         if (!isset($authorReq) && !isset($releaseyear) && !isset($title)) {
             $users = User::whereDate('created_at', $startDate);
             $books = BookPage::latest();
-            $borrow = Borrow::where('status', 'approved');
+            $borrow = Borrow::where('status', 'approved')->where('user_id', auth()->user()->id);
         }
         $author = BookPage::distinct()->pluck('user_id');
 
         $release_year = BookPage::distinct()->pluck('release_year');
         $borrowData = (clone $borrow)->get();
         $wish = WishList::where('user_id', auth()->user()->id)->pluck('wish');
+        //dd($wish);
 
         $totalBooks = (clone $books)->count();
         $totalUsers = (clone $users)->count();
@@ -97,7 +98,7 @@ class UserDashboardController extends Controller
         $bookData = (clone $books)->get();
         $totalBorrow = (clone $borrow)->count();
 
-        $totalWish = (clone $wish)->count();
+        $totalWish = $wish[0];
 
 
         // Get applied job IDs
@@ -184,9 +185,10 @@ class UserDashboardController extends Controller
 
             if ($book->quantity <= 0) {
                 //send borrow request
-                $wish = $book->wish ? $book->wish : 0;
+                $wish = Wishlist::where('user_id', auth()->user()->id)->pluck('wish');
+                $wish = $wish[0] ? $wish[0] : 0;
                 $wish += 1;
-                $book->wish = $wish;
+                //$book->wish = $wish;
                 // dd($book->id);
                 //update borrow status
 
