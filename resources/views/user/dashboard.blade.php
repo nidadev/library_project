@@ -27,9 +27,11 @@
             <div>
                 <!--input class="form-control" placeholder="Pick Genre" id="genre" /-->
                 <select class="form-control tag js-example-basic-multiple" name="states[]" multiple="multiple" id="genre">
-                    <option value="movies">movies</option>
-                    <option value="test">test</option>
-                    <option value="red">red</option>
+                @foreach($genre as $gn)
+                    <?php //dd($author) ?>
+                    <option value="{{ $gn }}">{{ $gn }}</option>
+
+                    @endforeach
 
                   </select>
             </div>
@@ -334,7 +336,44 @@ $("#titleSearch").submit(function(event) {
                     "order": []
                 });
             }
+            $('#genre').change(function(){
+               // alert('');
+                var genre = $('#genre').val();
+                //alert(genre);
+                gn = '"'+genre+'"';
+                gne = gn.split(",");
+               //alert(genre.split(","));
+               loadDashboardDataByGenre(gne);
 
+            });
+
+            function loadDashboardDataByGenre(genre) {
+                //alert(genre);
+                
+                $("#dashboard-content").hide();
+                $("#dashboard-skeleton").removeClass('d-none');
+
+                $.ajax({
+                    url: "{{ route('user.bookpage.dashboard.data') }}",
+                    method: "POST",
+                    data: {
+                        genre: genre,
+                        _token: "{{ csrf_token() }}"
+                    },
+                    success: function(response) {
+                        //alert(data.author);
+                       // alert(response);
+                        $("#dashboard-skeleton").addClass('d-none');
+                        $("#dashboard-content").html(response).fadeIn();
+                        initializeDataTables();
+                    },
+                    error: function() {
+                        $("#dashboard-skeleton").removeClass('d-none');
+                        $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                            .fadeIn();
+                    }
+                });
+            }
             function loadDashboardData(start, end) {
                 $("#dashboard-content").hide();
                 $("#dashboard-skeleton").removeClass('d-none');

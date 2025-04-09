@@ -58,11 +58,11 @@ Route::prefix('admin')->name('admin.')->group(function () {
 
 
             Route::post('bookavailable/{id}', [BookPageController::class, 'sendWishListToUser'])->name('bookavailable.store');
-            Route::get('send-mail', [BookPageController::class, 'sendMail'])->name('send-mail');
+            // Route::get('mail2', [BookPageController::class, 'sendMail'])->name('mail2');
 
-            Route::post('send-mail', [BookPageController::class, 'sendMail'])->name('send-mail');
+            // Route::post('mail2', [BookPageController::class, 'sendMail'])->name('mail2');
 
-            // Route::post('dashboard/data/author', [DashboardController::class, 'fetchDashboardDataAuthor'])->name('dashboard.data.author');
+            // // Route::post('dashboard/data/author', [DashboardController::class, 'fetchDashboardDataAuthor'])->name('dashboard.data.author');
 
         });
 

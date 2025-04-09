@@ -42,6 +42,9 @@ class UserDashboardController extends Controller
 
         $startDate = $request->start_date;
         $endDate = $request->end_date;
+        $genre = $request->genre ? $request->genre : null;
+
+
         //
         // $users = User::whereBetween('created_at', [$startDate, $endDate]);
         // $books = BookPage::with('user')->whereBetween('created_at', [$startDate, $endDate]);
@@ -51,7 +54,13 @@ class UserDashboardController extends Controller
         $releaseyear = $request->year ? $request->year : null;
         $title = $request->title ? $request->title : null;
 
-
+        if (isset($genre)) {
+            //
+            $arr = str_replace('"', "", $genre);
+            $users = User::latest();
+            $books = BookPage::whereIn('categories', $arr);
+            $borrow = Borrow::where('status', 'approved');
+        }
         if (isset($authorReq)) {
             //
             $users = User::where('id', $authorReq);
@@ -80,17 +89,18 @@ class UserDashboardController extends Controller
             $books = BookPage::whereBetween('created_at', [$startDate, $endDate]);
             $borrow = Borrow::where('status', 'applied')->whereBetween('created_at', [$startDate, $endDate]);
         }
-        if (!isset($authorReq) && !isset($releaseyear) && !isset($title)) {
+        if (!isset($authorReq) && !isset($releaseyear) && !isset($title) && !isset($genre)) {
             $users = User::whereDate('created_at', $startDate);
             $books = BookPage::latest();
             $borrow = Borrow::where('status', 'approved')->where('user_id', auth()->user()->id);
         }
         $author = BookPage::distinct()->pluck('user_id');
+        $genre = BookPage::distinct()->pluck('categories');
 
         $release_year = BookPage::distinct()->pluck('release_year');
         $borrowData = (clone $borrow)->get();
         $wish = WishList::where('user_id', auth()->user()->id)->pluck('wish');
-        //dd($wish);
+        $wish = isset($wish[0]) ? $wish[0] : 0;
 
         $totalBooks = (clone $books)->count();
         $totalUsers = (clone $users)->count();
@@ -98,7 +108,7 @@ class UserDashboardController extends Controller
         $bookData = (clone $books)->get();
         $totalBorrow = (clone $borrow)->count();
 
-        $totalWish = $wish[0];
+        $totalWish = $wish;
 
 
         // Get applied job IDs
@@ -134,7 +144,8 @@ class UserDashboardController extends Controller
             'totalBorrow',
             'totalWish',
             'author',
-            'release_year'
+            'release_year',
+            'genre'
             // 'jobApplicationsCount',
             // 'shortlisted',
             // 'interviews',
@@ -186,7 +197,7 @@ class UserDashboardController extends Controller
             if ($book->quantity <= 0) {
                 //send borrow request
                 $wish = Wishlist::where('user_id', auth()->user()->id)->pluck('wish');
-                $wish = $wish[0] ? $wish[0] : 0;
+                $wish = isset($wish[0]) ? $wish[0] : 0;
                 $wish += 1;
 
 

@@ -272,24 +272,29 @@ if($bk)
 
                 // dispatch(new SendEmailJob($userEmail));
 
-                $wish_users = WishList::select('user_id')->get();
+                $wish_users = WishList::select('user_id')->with('user')->get()->toArray();
                 //dd($wish_users);
                 foreach($wish_users as $wu){
-                    $userids[] = $wu->user_id;
-                    $users = User::whereIn("id",$userids)->get();
+                    $emails[] = $wu['user']['email'];
+                    //$users = User::whereIn("id",$userids)->get();
                     //dd($users[0]);
-                    foreach ($users as $key => $user) {
+                   // foreach ($users as $key => $user) {
 
                         //     Mail::to($user->email)->send(new UserEmail($user));
-                        Mail::to($user->email)->send();
+                       // Mail::to($user->email)->send();
 
-
-                         }
+//
+                         //}
                     //  $uid = $wu->user_id;
                     //     $findemail = User::find($uid);
 
                     //     dispatch(new SendEmailJob($findemail));
                      }
+
+                     Mail::send('admin.bookpage.email.testMail2',[], function($message) use($emails){
+                        $message->to($emails)->subject('This is test');
+            
+                    });
 
                 //$users = User::whereIn("id", $request->ids)->get();
 
@@ -304,7 +309,7 @@ if($bk)
 
 
                 // return response()->json(['success'=>'Send email successfully.']);
-                //  dd('send mail successfully');
+                  dd('send mail successfully');
     }
 
     public function sendWishListToUser($id)

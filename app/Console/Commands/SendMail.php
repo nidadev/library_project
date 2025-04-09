@@ -30,21 +30,19 @@ class SendMail extends Command
     public function handle()
     {
         //
-
-
-        Mail::to('nzeeshan@fossphorus.com')->send();
+        $wish_users = WishList::select('user_id')->with('user')->get()->toArray();
         //dd($wish_users);
-        // foreach ($wish_users as $wu) {
-        //     $uid = $wu->user_id;
-        //     $findemail = User::find($uid);
+        $emails = [];
+        foreach($wish_users as $wu){
+            $emails = $wu['user']['email'];
+        }
 
-        //     dispatch(new SendEmailJob($findemail));
-        // }
-        // $users = User::find($wish_users[0]['user_id']);
-        // dd($users->email);
-        //         $userEmail = $users->email;
+        //dispatch(new SendEmailJob($emails));
+        Mail::send('admin.bookpage.email.testMail',[], function($message) use($emails){
+            $message->to($emails)->subject('This is test');
 
-        // dispatch(new SendEmailJob($userEmail));
-        //dd('send mail successfully');
+        });
+
+        
     }
 }

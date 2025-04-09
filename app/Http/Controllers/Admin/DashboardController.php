@@ -57,7 +57,16 @@ class DashboardController extends Controller
         $authorReq = $request->author ? $request->author : null;
         $releaseyear = $request->year ? $request->year : null;
         $title = $request->title ? $request->title : null;
+        $genre = $request->genre ? $request->genre : null;
 
+
+        if (isset($genre)) {
+            //
+            $arr = str_replace('"', "", $genre);
+            $users = User::latest();
+            $books = BookPage::whereIn('categories', $arr);
+            $borrow = Borrow::where('status', 'approved');
+        }
         if (isset($authorReq)) {
 
             //
@@ -89,7 +98,7 @@ class DashboardController extends Controller
             $books = BookPage::whereBetween('created_at', [$startDate, $endDate]);
             $borrow = Borrow::where('status', 'approved')->whereBetween('created_at', [$startDate, $endDate]);
         }
-        if (!isset($authorReq) && !isset($releaseyear) && !isset($title)) {
+        if (!isset($authorReq) && !isset($releaseyear) && !isset($title)  && !isset($genre)) {
             $users = User::whereDate('created_at', $startDate);
             $books = BookPage::whereDate('created_at', $startDate);
             $borrow = Borrow::where('status', 'approved');
@@ -111,6 +120,7 @@ class DashboardController extends Controller
         $borrowData = (clone $borrow)->get();
         $totalBorrow = (clone $borrow)->count();
 
+        $genre = BookPage::distinct()->pluck('categories');
 
 
         return compact(
@@ -121,7 +131,8 @@ class DashboardController extends Controller
             'borrowData',
             'totalBorrow',
             'author',
-            'release_year'
+            'release_year',
+            'genre'
             // 'jobApplicationsCount',
             // 'shortlisted',
             // 'interviews',
