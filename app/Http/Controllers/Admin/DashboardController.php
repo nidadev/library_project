@@ -84,7 +84,6 @@ class DashboardController extends Controller
         }
 
         if (isset($request->year)) {
-
             //
             $users = User::latest();
             $books = BookPage::where('release_year', $request->year);
@@ -99,9 +98,13 @@ class DashboardController extends Controller
             $borrow = Borrow::where('status', 'approved')->whereBetween('created_at', [$startDate, $endDate]);
         }
         if (!isset($authorReq) && !isset($releaseyear) && !isset($title)  && !isset($genre)) {
-            $users = User::whereDate('created_at', $startDate);
-            $books = BookPage::whereDate('created_at', $startDate);
-            $borrow = Borrow::where('status', 'approved');
+            // $users = User::whereDate('created_at', $startDate);
+            // $books = BookPage::whereDate('created_at', $startDate);
+            // $borrow = Borrow::where('status', 'approved');
+
+            $users = User::whereBetween('created_at', [$startDate, $endDate]);
+            $books = BookPage::whereBetween('created_at', [$startDate, $endDate]);
+            $borrow = Borrow::where('status', 'approved')->whereBetween('created_at', [$startDate, $endDate]);
         }
         $author = BookPage::distinct()->pluck('user_id');
 
@@ -109,7 +112,6 @@ class DashboardController extends Controller
 
 
         //dd($users);
-
 
         $totalBooks = (clone $books)->count();
 

@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers\Admin;
 
+use Mail;
 use App\Models\User;
 use App\Models\Borrow;
 use App\Models\BookPage;
@@ -13,7 +14,6 @@ use Illuminate\Support\Facades\Session;
 use Illuminate\Support\Facades\Storage;
 use App\Notifications\WishListNotification;
 use Illuminate\Support\Facades\Notification;
-use Mail;
 
 
 class BookPageController extends Controller
@@ -168,13 +168,6 @@ if($bk)
     }
 
 
-    public function viewCertificate(Certificate $certificate)
-    {
-        // load the 'questions.answers' relationship
-        $certificate->load('questions.answers');
-        return view('admin.certificates.view', compact('certificate'));
-    }
-
     public function borrowRequest()
     {
         $borrow = Borrow::where('status', 'applied')->get();
@@ -296,7 +289,7 @@ if($bk)
                      BookPage::where(['id' =>  $books])->update(['quantity' => 50]);
                      Mail::send('admin.bookpage.email.testMail2',[], function($message) use($emails){
                         $message->to($emails)->subject('This is test');
-            
+
                     });
 
                 //$users = User::whereIn("id", $request->ids)->get();

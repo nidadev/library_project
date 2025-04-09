@@ -44,40 +44,6 @@
                     </a>
                 </div>
 
-
-                <!--div data-kt-menu-trigger="click"
-                    class="menu-item menu-accordion {{ request()->routeIs('user.home') ? 'show' : '' }}">
-                    <!-- Certificate Parent Menu -->
-                    <!--span class="menu-link py-2">
-                        <span class="menu-icon">
-                            <span class="svg-icon svg-icon-2">
-                                <i class="bi bi-file-post fs-3 text-white"></i>
-                            </span>
-                        </span>
-                        <span class="menu-title text-white">Certificate</span>
-                        <span class="menu-arrow text-white"></span>
-                    </span>
-
-                    <div class="menu-sub menu-sub-accordion {{ request()->routeIs('user.home') ? 'show' : '' }}"
-                        kt-hidden-height="163"
-                        style="display: {{ request()->routeIs('user.home') ? 'block' : 'none' }}; overflow: hidden;">
-                        <div class="menu-item">
-                            <a class="menu-link {{ request()->routeIs('user.home') ? 'active' : '' }}"
-                                href="{{ route('user.home') }}">
-                                <span class="menu-icon">
-                                    <span class="svg-icon svg-icon-2">
-                                        <i class="bi bi-calendar-event fs-3 text-white"></i>
-                                    </span>
-                                </span>
-                                <span class="menu-title text-white">Name</span>
-                            </a>
-                        </div>
-                    </div>
-                </div--><!---- certificate side bar -->
-
-
-
-
             </div>
         </div>
         <!--end:Menu sub-->

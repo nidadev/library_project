@@ -13,13 +13,14 @@
                     </div>
                     <div class="card-body">
                         <table class="table table-bordered" id="certificate_table">
+                            <p>Welcome to User
+                            </p>
                             <thead>
-                                <tr>
+                                {{-- <tr>
                                     <th>User Name</th>
                                     <th>Actions</th>
-                                </tr>
+                                </tr> --}}
                             </thead>
-
                         </table>
                     </div>
                 </div>

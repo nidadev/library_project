@@ -69,7 +69,6 @@ class UserDashboardController extends Controller
         }
 
         if (isset($request->year)) {
-
             //
             $users = User::latest();
             $books = BookPage::where('release_year', $request->year);
@@ -90,9 +89,14 @@ class UserDashboardController extends Controller
             $borrow = Borrow::where('status', 'applied')->whereBetween('created_at', [$startDate, $endDate]);
         }
         if (!isset($authorReq) && !isset($releaseyear) && !isset($title) && !isset($genre)) {
-            $users = User::whereDate('created_at', $startDate);
+            // $users = User::whereDate('created_at', $startDate);
+            // $books = BookPage::latest();
+            // $borrow = Borrow::where('status', 'approved')->where('user_id', auth()->user()->id);
+
+            $users = User::whereBetween('created_at', [$startDate, $endDate]);
             $books = BookPage::latest();
-            $borrow = Borrow::where('status', 'approved')->where('user_id', auth()->user()->id);
+            $borrow = Borrow::where('status', 'approved')->where('user_id', auth()->user()->id)->whereBetween('created_at', [$startDate, $endDate]);
+
         }
         $author = BookPage::distinct()->pluck('user_id');
         $genre = BookPage::distinct()->pluck('categories');
@@ -110,29 +114,6 @@ class UserDashboardController extends Controller
 
         $totalWish = $wish;
 
-
-        // Get applied job IDs
-        // $appliedJobIds = candidate()->jobApplications()->pluck('job_post_id')->toArray();
-
-        // // Base query for job applications
-        // $jobApplications = candidate()->jobApplications()->whereBetween('created_at', [$startDate, $endDate]);
-
-        // // Clone query to avoid modifying original query
-        // $jobApplicationsCount = (clone $jobApplications)->count();
-        // $shortlisted = (clone $jobApplications)->where('status', 'shortlisted')->count();
-        // $interviews = (clone $jobApplications)->where('status', 'interviewing')->count();
-        // $rejected = (clone $jobApplications)->where('status', 'rejected')->count();
-
-        // Fetch applied jobs
-        //$jobs = (clone $jobApplications)->with(['jobPost', 'jobPost.employer'])->get();
-
-        // Fetch recommended jobs
-        // $recommendedJobs = JobPost::approve()
-        //     ->open()
-        //     ->whereNotIn('id', $appliedJobIds)
-        //     ->latest()
-        //     ->take(5)
-        //     ->get();
 
         return compact(
             'userData',
@@ -163,13 +144,15 @@ class UserDashboardController extends Controller
     public function borrowRequestSend($id, Request $request)
     {
         //dd($request);
-        $book = BookPage::find($id);
+        $book = BookPage::find($request->borrowid);
+        //dd($book);
         $user_id = auth()->user()->id;
         if (isset($request->borrow)) {
 
             //dd($book);
             if ($book->quantity >= 1) {
                 //send borrow request
+                //dd('111');
 
                 $borrow = Borrow::create([
                     'book_id' => $book->id,
@@ -181,8 +164,12 @@ class UserDashboardController extends Controller
                 //add to table
                 Session::flash('success', 'Borrow request send to admin');
 
-                return redirect()->route('user.bookpage.dashboard')->with('success', 'Boorow request send to admin');
-
+                //return redirect()->route('user.bookpage.dashboard')->with('success', 'Boorow request send to admin');
+                return response()->json([
+                    'success' => true,
+                    'message' => 'BookPage created successfully.',
+                    'redirect_url' => route('user.bookpage.dashboard'),
+                ], 201);
                 //dd('add to db');
             } else {
                 //dd('error');

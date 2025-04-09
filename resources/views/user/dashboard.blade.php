@@ -1,17 +1,61 @@
 <style>
-    .tag
+ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+li {
+  float: left;
+}
+
+li  {
+  display: block;
+  text-decoration: none;
+}
+
+
+/*.searchTitle {
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+.searchTitle {
+  float: left;
+}
+
+.searchTitle span {
+  display: block;
+  padding: 16px;
+  text-decoration: none;
+}*/
+
+.tag
     {
         width:150px !important;
         background: #fff !important;
     }
-    </style>
+    .inputTitle
+    {
+        /*width:140px !important;*/
+    }
+    .space
+    {
+        padding-right:80px;
+    }
+</style>
 <x-user.layout pageTitle="Dashboard">
     <!-- Date Range -->
+
     @if(session()->has('message'))
     {{ session()->get('message') }}
     @endif
+    <div id="success">
+    </div>
     <div class="col-xl-12 mx-auto mb-3">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex space">
             <div>
                 <input class="form-control" placeholder="Pick date range" id="dateRange" />
             </div>
@@ -45,11 +89,15 @@
                     @endforeach
                   </select>
             </div>
-            <div>
+
+            <div class="searchTitle">
                 <form method="POST" action="#" id="titleSearch">
                     @csrf
-                <input type="text" name="search" class="form-control" id="searchTitle" />
-                <input type="submit" name="submit" class="btn btn-primary form-control">
+                    <ul><li>
+                    <input type="text" name="search" class="form-control inputTitle" id="searchTitle" />
+                    </li>
+                       <li><input type="submit" name="submit" class="btn btn-primary form-control"></li>
+                       <ul>
                 </form>
             </div>
 
@@ -210,18 +258,49 @@
                     loadDashboardData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
                 });
 
-                // $('#resumes').on('change', function() {
-                //     if ($(this).val() == 'new') {
-                //         $('#upload_file').show();
-                //     } else {
-                //         $('#upload_file').hide();
-                //     }
-                // });
 
-                // Clear validation and reset form when the modal is closed
-                $("#applyJobModal").on("hidden.bs.modal", function() {
-                    $('#applyJobError').empty();
-                });
+
+                $(document).on('click', '.sendborrow', function(event){
+            event.preventDefault();
+            //alert('11');
+            var formId = $('#borrowform').attr('id');
+            //alert(formId);
+            var formData = new FormData($('#' + formId)[0]);
+            //alert(formData);
+
+            $.ajax({
+                            url: $('#borrowform').attr('action'),
+                            type: "POST",
+                            data: formData,
+                            dataType: "json",
+                            processData: false,
+                            contentType: false,
+                            headers: {
+                                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                            },
+                            success: function(response) {
+                                alert('succ');
+                                console.log(response.message);
+                                if (response.message) {
+                                    alert(response.message);
+                                    $('#success').text('success');
+                                   // $("#deleteModal_").modal("hide");
+                                    //location.reload();
+                                    window.location.href = response.redirect_url;
+
+                                } else {
+                                    let message = response.message || 'Something went wrong.';
+                                    //$('#applyJobError').empty().append(message);
+                                }
+                            },
+                            error: function(xhr) {
+                               // let errorMsg = xhr.responseJSON.message ||
+                                 //   "Something went wrong. Please try again.";
+                                //$('#applyJobError').empty().append(errorMsg);
+                            }
+                        });
+
+        });
 
                 $('.js-example-basic-multiple').select2();
 
@@ -349,7 +428,7 @@ $("#titleSearch").submit(function(event) {
 
             function loadDashboardDataByGenre(genre) {
                 //alert(genre);
-                
+
                 $("#dashboard-content").hide();
                 $("#dashboard-skeleton").removeClass('d-none');
 
@@ -365,6 +444,7 @@ $("#titleSearch").submit(function(event) {
                        // alert(response);
                         $("#dashboard-skeleton").addClass('d-none');
                         $("#dashboard-content").html(response).fadeIn();
+                        $("#newdiv").html(response).fadeIn();
                         initializeDataTables();
                     },
                     error: function() {

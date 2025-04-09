@@ -6,20 +6,22 @@
                 <div class="card-header">
                     <h3 class="card-title">Dashboard</h3>
                     <div class="card-toolbar">
-                      
+
                         <!--button class="btn btn-primary text-white" data-bs-toggle="modal"
                             data-bs-target="#addCertificateModal">Add Certificate</button-->
                     </div>
                 </div>
                 <div class="card-body">
                     <table class="table table-bordered" id="certificate_table">
+                        <p>Welcome to Admin
+                        </p>
                         <thead>
-                            <tr>
+                            {{-- <tr>
                                 <th>User Name</th>
                                 <th>Actions</th>
-                            </tr>
+                            </tr> --}}
                         </thead>
-                        
+
                     </table>
                 </div>
             </div>

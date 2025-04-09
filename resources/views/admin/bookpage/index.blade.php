@@ -31,15 +31,22 @@
                                     <td>
                                         <button class="btn btn-info btn-sm btn-icon" data-bs-toggle="modal"
                                             data-bs-target="#editbooPageModal_{{ $bookpage->id }}"
-                                            data-bs-toggle="tooltip" title="Edit Certificate">
+                                            data-bs-toggle="tooltip" title="Edit Book">
                                             <i class="bi bi-pencil"></i>
                                         </button>
 
-                                        <a href="{{ route('admin.bookpage.view', $bookpage) }}"
+                                        <!--a href="{{ route('admin.bookpage.view', $bookpage) }}"
                                             class="btn btn-primary btn-sm btn-icon" data-bs-toggle="tooltip"
                                             title="View Book">
                                             <i class="bi bi-eye"></i>
-                                        </a>
+                                        </a-->
+
+                                        <button class="btn btn-primary btn-sm btn-icon" data-bs-toggle="modal"
+                                        data-bs-target="#pdfPreviewModal_{{ $bookpage->id }}"
+                                        data-bs-toggle="tooltip" title="View PDF">
+                                        <i class="bi bi-eye"></i>
+                                    </button>
+
                                         <!--Delete -->
                                         <a href="{{ route('admin.bookpage.delete', $bookpage->id) }}"
                                             class="btn btn-danger btn-sm btn-icon" title="Delete Resume"
@@ -244,9 +251,41 @@
                                             </div>
                                         </div>
 
-                                       
+
                                     </td>
                                 </tr>
+
+                                <!-- View Modal -->
+<div class="modal fade" id="pdfPreviewModal_{{ $bookpage->id }}"
+    tabindex="-1" aria-labelledby="pdfPreviewModalLabel_{{$bookpage->id }}"
+    aria-hidden="true" data-bs-backdrop="static">
+    <div class="modal-dialog modal-lg">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">{{ $bookpage->name }}</h5>
+                <button type="button" class="btn-close"
+                    data-bs-dismiss="modal"></button>
+            </div>
+            <div class="modal-body text-center">
+                @php
+                    $fileExtension = pathinfo($bookpage->file_path_pdf,PATHINFO_EXTENSION,);
+                @endphp
+
+                @if (strtolower($fileExtension) === 'pdf')
+                    <!-- Embed PDF for Preview -->
+                    <embed src="{{ asset('storage/' . $bookpage->file_path_pdf) }}"
+                        type="application/pdf" width="100%" height="500px">
+                @else
+                    <!-- Show Download Button for Non-PDF Files -->
+                    <p class="text-dark">Preview not available for this file
+                        type.</p>
+
+                @endif
+            </div>
+        </div>
+    </div>
+</div>
+<!-- View -->
                                 @endforeach
                             </tbody>
                         </table>
@@ -292,7 +331,7 @@
                                 <!--end::Label-->
 
                                 <input type="text" class="form-control" placeholder="Enter Year"
-                                    name="release_year" id="release_year">
+                                    name="release_year" id="release_year" onkeydown="javascript:preventInput(event);" onkeyup="javascript:preventInput(event);">
                                 <div
                                     class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
                                 </div>
@@ -370,38 +409,7 @@
                             </div>
                             <!--end::Actions-->
                         </form>
-                        <!--form action="{{ route('admin.bookpage.store') }}" method="POST" id="addCertificateForm">
-                        @csrf
-                        <!--begin::Input group->
-                        <div class="d-flex flex-column mb-8 fv-row fv-plugins-icon-container">
-                            <!--begin::Label->
-                            <label for="certificate_name" class="d-flex align-items-center fs-6 fw-semibold mb-2">
-                                <span class="required">Name</span>
-                            </label>
-                            <!--end::Label->
 
-                            <input type="text" class="form-control" placeholder="Enter Certificate Name"
-                                name="book_name" id="certificate_name">
-                            <div
-                                class="fv-plugins-message-container fv-plugins-message-container--enabled invalid-feedback">
-                            </div>
-                        </div>
-                      
-
-                        <!--begin::Actions->
-                        <div class="text-center">
-                            <button id="createCertificateBtn" class="btn btn-primary text-white">
-                                <span class="indicator-label">
-                                    Create Certificate
-                                </span>
-                                <span class="indicator-progress">
-                                    Please wait... <span
-                                        class="spinner-border spinner-border-sm align-middle ms-2"></span>
-                                </span>
-                            </button>
-                        </div>
-                        <!--end::Actions-->
-                        <!--/form-->
 
                     </div>
                 </div>
@@ -410,9 +418,23 @@
     </div>
     <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.7.1/jquery.min.js"></script>
     @push('scripts')
-        
+
     <script>
+         function preventInput(e) {
+            //48 se 57 numbers on keyboard
+            var keyCode = (e.keyCode ? e.keyCode : e.which);
+            if (keyCode > 58 && keyCode < 48 || keyCode > 57) {
+                e.preventDefault();
+            }
+        }
         $(document).ready(function() {
+
+
+        $('#release_year').on("keyup", function(e) {
+            //if validation true
+            // Validate form before submitting
+            preventInput(e);
+        });
             $.ajaxSetup({
                 headers: {
                     'x-csrf-token': $('meta[name="csrf-token"]').attr('content')
@@ -431,7 +453,10 @@
                 $('#addCertificateForm textarea').removeClass('is-invalid');
                 $('#addCertificateForm')[0].reset();
             });
+//view
 
+
+//
             // Clear Validation when Edit Book Page Modal closes
             $(document).on('hidden.bs.modal', '[id^=editBookPageModal_]', function(event) {
                 var BookPageId = $(this).attr('id').split('_')[1]; // Fix index issue
@@ -699,7 +724,7 @@
             });
 
         });
-    
+
         // Validate Create BookPage Form
         function validateCreateBookPageForm() {
             var isValid = true;
@@ -783,7 +808,7 @@
                 $tagContainer.closest('.fv-row').find('.fv-plugins-message-container').empty();
             }
 
-            // Validate BookPage Image File 
+            // Validate BookPage Image File
             var BookPageImageFile = $('#book_image');
             var file = BookPageImageFile[0].files[0];
 

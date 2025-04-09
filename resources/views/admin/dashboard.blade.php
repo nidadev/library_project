@@ -1,14 +1,37 @@
 <style>
+    ul {
+  list-style-type: none;
+  margin: 0;
+  padding: 0;
+  overflow: hidden;
+}
+
+li {
+  float: left;
+}
+
+li  {
+  display: block;
+  text-decoration: none;
+}
     .tag
     {
         width:150px !important;
         background: #fff !important;
     }
+    .inputTitle
+    {
+        width:40%;
+    }
+    .space
+    {
+        padding-right:80px;
+    }
     </style>
 <x-admin.layout pageTitle="Dashboard">
     <!-- Date Range -->
     <div class="col-xl-12 mx-auto mb-3">
-        <div class="d-flex justify-content-between">
+        <div class="d-flex space">
             <div>
                 <input class="form-control" placeholder="Pick date range" id="dateRange" />
             </div>
@@ -34,7 +57,7 @@
 
               </select>
             </div>
-          
+
             <div>
                 <select class="form-select" id="year" aria-label="Default select example">
                     <option selected>Select</option>
@@ -48,8 +71,10 @@
             <div>
                 <form method="POST" action="#" id="titleSearch">
                     @csrf
-                <input type="text" name="search" class="form-control" id="searchTitle" />
-                <input type="submit" name="submit" class="btn btn-primary form-control">
+                    <ul><li>
+                <input type="text" name="search" class="form-control inputTitle" id="searchTitle" />
+                    </li>
+                <li><input type="submit" name="submit" class="btn btn-primary form-control"></li></ul>
                 </form>
             </div>
 
@@ -144,7 +169,7 @@
     @push('scripts')
         <script>
             $(document).ready(function() {
-                
+
 
                 $('.js-example-basic-multiple').select2();
                 //alert('')
@@ -272,12 +297,12 @@
 
             });
 
-           
+
 
 
             function loadDashboardDataByGenre(genre) {
                 //alert(genre);
-                
+
                 $("#dashboard-content").hide();
                 $("#dashboard-skeleton").removeClass('d-none');
 

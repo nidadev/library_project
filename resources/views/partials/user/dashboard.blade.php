@@ -7,7 +7,9 @@
 <div class="row gy-5">
     <!-- States -->
 
+    <div id="success">
 
+    </div>
     <div class="col-md-3">
         <div class="card text-center">
             <div class="card-header align-items-center justify-content-center">
@@ -114,11 +116,13 @@
                     data-bs-dismiss="modal">Cancel</button>
                 <form
                     action="{{ route('user.bookpage.borrow.store', $bk->id) }}"
-                    method="POST">
+                    method="POST" id="borrowform">
                     @csrf
                     <input type="hidden" name="borrow" value="borrow">
+                    <input type="hidden" name="borrowid" value="{{ $bk->id }}">
 
-                    <button type="submit" class="btn btn-danger">
+
+                    <button type="submit" class="btn btn-danger sendborrow">
                         Yes,Send
                     </button>
                 </form>

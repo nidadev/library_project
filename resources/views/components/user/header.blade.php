@@ -3,7 +3,7 @@
     <div class="header-brand">
         <!--begin::Logo-->
         <a href="{{ route('user.home') }}" class="d-flex align-items-center">
-            <img alt="Logo" src="" class="h-50px">
+            <!--img alt="Logo" src="" class="h-50px"-->
         </a>
         <!--end::Logo-->
         <!--begin::Aside minimize-->
@@ -80,14 +80,12 @@
             <div class="dropdown">
                 <a class="btn   dropdown-toggle text-white" href="#" role="button" data-bs-toggle="dropdown"
                     aria-expanded="false">
-                    <img src="" style="width: 25px;height: 25px;"
-                        class="rounded-circle"> {{ Auth::user()->name }}
+                    <!--img src="" style="width: 25px;height: 25px;"
+                        class="rounded-circle" --> {{ Auth::user()->name }}
                 </a>
 
                 <ul class="dropdown-menu">
-                    <li><a class="dropdown-item" href="">Profile
-                        </a></li>
-                    <li>
+
                         <a class="dropdown-item" href="{{ route('logout') }}"
                         onclick="event.preventDefault(); document.getElementById('logout-form').submit();">Log Out</a>
                     </li>
