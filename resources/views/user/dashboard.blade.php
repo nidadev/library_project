@@ -171,6 +171,7 @@ li  {
     </div>
 
     <!-- Dynamic Data Section -->
+
     <div id="dashboard-content">
         <?php //dd($bookData); ?>
         @include('partials.user.dashboard', ['books' => $bookData ])
@@ -188,7 +189,7 @@ li  {
     </div>
 
     <!-- Apply Job Modal -->
-    <div class="modal fade" id="applyJobModal" tabindex="-1" aria-labelledby="applyJobModalLabel" aria-hidden="true">
+    <div class="modal fade" id="applyJobModal" tabindex="-1" aria-labelledby="applyJobModalLabel" aria-hidden="false">
         <div class="modal-dialog">
             <div class="modal-content">
                 <div class="modal-header">
@@ -258,50 +259,6 @@ li  {
                     loadDashboardData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
                 });
 
-
-
-                $(document).on('click', '.sendborrow', function(event){
-            event.preventDefault();
-            //alert('11');
-            var formId = $('#borrowform').attr('id');
-            //alert(formId);
-            var formData = new FormData($('#' + formId)[0]);
-            //alert(formData);
-
-            $.ajax({
-                            url: $('#borrowform').attr('action'),
-                            type: "POST",
-                            data: formData,
-                            dataType: "json",
-                            processData: false,
-                            contentType: false,
-                            headers: {
-                                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-                            },
-                            success: function(response) {
-                                alert('succ');
-                                console.log(response.message);
-                                if (response.message) {
-                                    alert(response.message);
-                                    $('#success').text('success');
-                                   // $("#deleteModal_").modal("hide");
-                                    //location.reload();
-                                    window.location.href = response.redirect_url;
-
-                                } else {
-                                    let message = response.message || 'Something went wrong.';
-                                    //$('#applyJobError').empty().append(message);
-                                }
-                            },
-                            error: function(xhr) {
-                               // let errorMsg = xhr.responseJSON.message ||
-                                 //   "Something went wrong. Please try again.";
-                                //$('#applyJobError').empty().append(errorMsg);
-                            }
-                        });
-
-        });
-
                 $('.js-example-basic-multiple').select2();
 
                 function loadDashboardDataTitle(title) {
@@ -335,6 +292,80 @@ li  {
                    // alert(title);
                     loadDashboardDataTitle(title);
                 });
+                $(document).on('submit', '#borrowform', function(event){
+                   // alert()
+            event.preventDefault();
+            //alert('11');
+            var formId = $('#borrowform').attr('id');
+            //alert(formId);
+            var formData = new FormData($('#' + formId)[0]);
+            //alert(formData);
+
+            // $.ajax({
+            //     type: "POST",
+            //                 url: $('#borrowform').attr('action'),
+            //                 data: formData,
+            //                 processData: false,
+            //                 contentType: false,
+            //                 headers: {
+            //                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+            //                 },
+            //                 success: function(response) {
+            //                     if(response)
+            //                     {
+            //                         alert('succ');
+            //                     }
+            //                     console.log(response.message);
+            //                     if (response.message) {
+            //                         alert(response.message);
+            //                         $('#success').text('success');
+            //                        // $("#deleteModal_").modal("hide");
+            //                         //location.reload();
+            //                         window.location.href = response.redirect_url;
+
+            //                     } else {
+            //                         let message = response.message || 'Something went wrong.';
+            //                         //$('#applyJobError').empty().append(message);
+            //                     }
+            //                 },
+            //                 error: function(xhr) {
+            //                    // let errorMsg = xhr.responseJSON.message ||
+            //                      //   "Something went wrong. Please try again.";
+            //                     //$('#applyJobError').empty().append(errorMsg);
+            //                 }
+            //             });
+            $.ajax({
+                    url: $('#borrowform').attr('action'),
+                    method: "POST",
+
+                    data:
+                      //  _token: "{{ csrf_token() }}",
+
+                        formData,
+                                     //},
+
+                            processData: false,
+    contentType: false,
+    cache: false,
+    headers: {
+            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+            },
+                    success: function(response) {
+                        alert(response);
+                        $("#dashboard-skeleton").addClass('d-none');
+                        $("#dashboard-content").html(response).fadeIn();
+                        //initializeDataTables();
+                    },
+                    error: function() {
+                     $("#dashboard-skeleton").removeClass('d-none');
+                       $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                           .fadeIn();
+                    }
+                });
+
+
+
+        }); //borrow
 
                 $("#applyJobForm").submit(function(event) {
                     event.preventDefault();
@@ -414,6 +445,11 @@ $("#titleSearch").submit(function(event) {
                     "destroy": true,
                     "order": []
                 });
+
+                // $('#appliedJobsTable','#recommendedJobsTable').DataTable({
+                //     "destroy": true,
+                //     "order": []
+                // });
             }
             $('#genre').change(function(){
                // alert('');
@@ -467,7 +503,9 @@ $("#titleSearch").submit(function(event) {
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
-                        //alert(response);
+                        alert('111');
+
+                        //$('#newdiv').html(data.message);
                         $("#dashboard-skeleton").addClass('d-none');
                         $("#dashboard-content").html(response).fadeIn();
                         initializeDataTables();
