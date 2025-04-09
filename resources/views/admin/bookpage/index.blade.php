@@ -451,8 +451,8 @@
             $(document).on('show.bs.modal', '[id^=editBookPageModal_]', function(event) {
                 var BookPageId = $(this).attr('id').split('_')[1]; // Fix index issue
                 $('#editBookPageFilePreview_' + BookPageId).hide();
-                $('.BookPage-file').show();
-                $('.BookPage-pdf').show();
+                $('.Bookpage-file').show();
+                $('.Bookpage-pdf').show();
             });
 
             // Create Book Page Modal Form - Submission event listener
@@ -639,6 +639,21 @@
                 }
             });
 
+            $('#book_pdf').change(function() {
+                var input = this;
+                if (input.files && input.files[0]) {
+                    var reader = new FileReader();
+
+                    reader.onload = function(e) {
+                        $('#BookPageFilePdfPreview').attr('src', e.target.result).show();
+                    }
+
+                    reader.readAsDataURL(input.files[0]); // convert to base64 string
+                } else {
+                    $('#BookPageFilePdfPreview').hide();
+                }
+            });
+
             // Image Preview Functionality for Edit BookPage Modal
             $(document).on('change', '[id^=edit_book_image_]', function() {
                 var input = this;
@@ -651,13 +666,13 @@
                             .show();
 
                         // we will hide BookPage-file when we showing the preview
-                        $('.BookPage-file').hide();
+                        $('.Bookpage-file').hide();
                     }
 
                     reader.readAsDataURL(input.files[0]); // convert to base64 string
                 } else {
                     $('#editBookPageFilePreview_' + BookPageId).hide();
-                    $('.BookPage-file').show();
+                    $('.Bookpage-file').show();
                 }
             });
 
@@ -673,13 +688,13 @@
                             .show();
 
                         // we will hide BookPage-file when we showing the preview
-                        $('.BookPage-pdf').hide();
+                        $('.Bookpage-pdf').hide();
                     }
 
                     reader.readAsDataURL(input.files[0]); // convert to base64 string
                 } else {
                     $('#editBookPageFilePdfPreview_' + BookPageId).hide();
-                    $('.BookPage-pdf').show();
+                    $('.Bookpage-pdf').show();
                 }
             });
 
@@ -827,7 +842,6 @@
             var isValid = true;
             var maxSize = 20 * 1024 * 1024; // 20MB in Bytes
             var allowedTypes = ['image/jpeg', 'image/jpg', 'image/webp'];
-            var allowedTypesPdf = ['pdf'];
             // Validate BookPage Name
             var BookPageName = $('#edit_book_name_' + BookPageId).val().trim();
             if (BookPageName === '') {
@@ -901,6 +915,8 @@
             var filepdf = BookPdfFile[0].files[0];
 
             if (filepdf) {
+                var allowedTypesPdf = ['pdf', 'application/pdf'];
+//alert(filepdf.type);
                 if (filepdf.size > maxSize) {
                     BookPdfFile.addClass('is-invalid');
                     BookPdfFile.closest('.fv-row').find('.fv-plugins-message-container')
