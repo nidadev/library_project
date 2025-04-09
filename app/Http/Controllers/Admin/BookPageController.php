@@ -271,10 +271,12 @@ if($bk)
 //         $userEmail = $users->email;
 
                 // dispatch(new SendEmailJob($userEmail));
-
-                $wish_users = WishList::select('user_id')->with('user')->get()->toArray();
-                //dd($wish_users);
+                $book = BookPage::where('quantity', 0)->get();
+                //dd($book);
+                $wish_users = WishList::select('user_id', 'book_id')->with(['user', 'book'])->get()->toArray();
+                // /dd($wish_users['book_id']);
                 foreach($wish_users as $wu){
+                    $books[] = $wu['book_id'];
                     $emails[] = $wu['user']['email'];
                     //$users = User::whereIn("id",$userids)->get();
                     //dd($users[0]);
@@ -290,7 +292,8 @@ if($bk)
 
                     //     dispatch(new SendEmailJob($findemail));
                      }
-
+                    // dd($books[0]);
+                     BookPage::where(['id' =>  $books])->update(['quantity' => 50]);
                      Mail::send('admin.bookpage.email.testMail2',[], function($message) use($emails){
                         $message->to($emails)->subject('This is test');
             
