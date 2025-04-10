@@ -143,7 +143,7 @@ class UserDashboardController extends Controller
 
     public function borrowRequestSend($id, Request $request)
     {
-        //dd($request);
+        dd($request);
         $book = BookPage::find($request->borrowid);
         //dd($book);
         $user_id = auth()->user()->id;
@@ -164,12 +164,12 @@ class UserDashboardController extends Controller
                 //add to table
                 Session::flash('success', 'Borrow request send to admin');
 
-                //return redirect()->route('user.bookpage.dashboard')->with('success', 'Boorow request send to admin');
-                return response()->json([
-                    'success' => true,
-                    'message' => 'BookPage created successfully.',
-                    'redirect_url' => route('user.bookpage.dashboard'),
-                ], 201);
+               return redirect()->route('user.bookpage.dashboard')->with('success', 'Boorow request send to admin');
+                // return response()->json([
+                //     'success' => true,
+                //     'message' => 'Borrow request send successfully.',
+                //     'redirect_url' => route('user.bookpage.dashboard'),
+                // ], 201);
                 //dd('add to db');
             } else {
                 //dd('error');

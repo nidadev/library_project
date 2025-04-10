@@ -1,22 +1,22 @@
 <style>
-ul {
-  list-style-type: none;
-  margin: 0;
-  padding: 0;
-  overflow: hidden;
-}
+    ul {
+        list-style-type: none;
+        margin: 0;
+        padding: 0;
+        overflow: hidden;
+    }
 
-li {
-  float: left;
-}
+    li {
+        float: left;
+    }
 
-li  {
-  display: block;
-  text-decoration: none;
-}
+    li {
+        display: block;
+        text-decoration: none;
+    }
 
 
-/*.searchTitle {
+    /*.searchTitle {
   margin: 0;
   padding: 0;
   overflow: hidden;
@@ -32,18 +32,17 @@ li  {
   text-decoration: none;
 }*/
 
-.tag
-    {
-        width:150px !important;
+    .tag {
+        width: 150px !important;
         background: #fff !important;
     }
-    .inputTitle
-    {
+
+    .inputTitle {
         /*width:140px !important;*/
     }
-    .space
-    {
-        padding-right:80px;
+
+    .space {
+        padding-right: 80px;
     }
 </style>
 <x-user.layout pageTitle="Dashboard">
@@ -52,8 +51,7 @@ li  {
     @if(session()->has('message'))
     {{ session()->get('message') }}
     @endif
-    <div id="success">
-    </div>
+  
     <div class="col-xl-12 mx-auto mb-3">
         <div class="d-flex space">
             <div>
@@ -63,41 +61,45 @@ li  {
                 <select class="form-select" id="author" aria-label="Default select example">
                     <option selected>Select</option>
                     @foreach($author as $at)
-                    <?php //dd($author) ?>
+                    <?php //dd($author) 
+                    ?>
                     <option value="{{ $at }}">Admin</option>
                     @endforeach
-                  </select>
+                </select>
             </div>
             <div>
                 <!--input class="form-control" placeholder="Pick Genre" id="genre" /-->
                 <select class="form-control tag js-example-basic-multiple" name="states[]" multiple="multiple" id="genre">
-                @foreach($genre as $gn)
-                    <?php //dd($author) ?>
+                    @foreach($genre as $gn)
+                    <?php //dd($author) 
+                    ?>
                     <option value="{{ $gn }}">{{ $gn }}</option>
 
                     @endforeach
 
-                  </select>
+                </select>
             </div>
             <div>
                 <select class="form-select" id="year" aria-label="Default select example">
                     <option selected>Select</option>
                     @foreach($release_year as $release_year)
-                    <?php //dd($author) ?>
+                    <?php //dd($author) 
+                    ?>
                     <option value="{{ $release_year }}">{{ $release_year }}</option>
 
                     @endforeach
-                  </select>
+                </select>
             </div>
 
             <div class="searchTitle">
                 <form method="POST" action="#" id="titleSearch">
                     @csrf
-                    <ul><li>
-                    <input type="text" name="search" class="form-control inputTitle" id="searchTitle" />
-                    </li>
-                       <li><input type="submit" name="submit" class="btn btn-primary form-control"></li>
-                       <ul>
+                    <ul>
+                        <li>
+                            <input type="text" name="search" class="form-control inputTitle" id="searchTitle" />
+                        </li>
+                        <li><input type="submit" name="submit" class="btn btn-primary form-control"></li>
+                        <ul>
                 </form>
             </div>
 
@@ -173,7 +175,8 @@ li  {
     <!-- Dynamic Data Section -->
 
     <div id="dashboard-content">
-        <?php //dd($bookData); ?>
+        <?php //dd($bookData); 
+        ?>
         @include('partials.user.dashboard', ['books' => $bookData ])
     </div>
 
@@ -235,33 +238,35 @@ li  {
     </div>
 
     @push('scripts')
-        <script>
-            $(document).ready(function() {
-                //alert('11');
-                // Initialize Date Range Picker
-                var startOfMonth = moment().startOf('month');
-                var endOfMonth = moment().endOf('month');
+    <script>
+        $(document).ready(function() {
+            //alert('11');
+            // Initialize Date Range Picker
+            var startOfMonth = moment().startOf('month');
+            var endOfMonth = moment().endOf('month');
 
-                // Initialize DataTables
-                initializeDataTables();
+            // Initialize DataTables
+            //initializeDataTables();
 
-                $("#dateRange").daterangepicker({
-                    startDate: startOfMonth,
-                    endDate: endOfMonth,
-                    ranges: {
-                        "Today": [moment(), moment()],
-                        "Last 7 Days": [moment().subtract(6, "days"), moment()],
-                        "This Month": [moment().startOf("month"), moment().endOf("month")],
-                        "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1,
-                            "month").endOf("month")]
-                    }
-                }, function(start, end) {
-                    loadDashboardData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
-                });
+            $("#dateRange").daterangepicker({
+                startDate: startOfMonth,
+                endDate: endOfMonth,
+                ranges: {
+                    "Today": [moment(), moment()],
+                    "Last 7 Days": [moment().subtract(6, "days"), moment()],
+                    "This Month": [moment().startOf("month"), moment().endOf("month")],
+                    "Last Month": [moment().subtract(1, "month").startOf("month"), moment().subtract(1,
+                        "month").endOf("month")]
+                }
+            }, function(start, end) {
+                loadDashboardData(start.format('YYYY-MM-DD'), end.format('YYYY-MM-DD'));
+            });
 
-                $('.js-example-basic-multiple').select2();
+            $('.js-example-basic-multiple').select2();
 
-                function loadDashboardDataTitle(title) {
+
+
+            function loadDashboardDataTitle(title) {
                 $("#dashboard-content").hide();
                 $("#dashboard-skeleton").removeClass('d-none');
 
@@ -273,7 +278,7 @@ li  {
                         _token: "{{ csrf_token() }}"
                     },
                     success: function(response) {
-                       // alert(response);
+                        // alert(response);
                         $("#dashboard-skeleton").addClass('d-none');
                         $("#dashboard-content").html(response).fadeIn();
                         initializeDataTables();
@@ -287,339 +292,303 @@ li  {
             }
             $("#titleSearch").submit(function(event) {
                 //alert('111');
-                    event.preventDefault();
-                    var title = $('#searchTitle').val();
-                   // alert(title);
-                    loadDashboardDataTitle(title);
-                });
-                $(document).on('submit', '#borrowform', function(event){
-                   // alert()
-            event.preventDefault();
-            //alert('11');
-            var formId = $('#borrowform').attr('id');
-            //alert(formId);
-            var formData = new FormData($('#' + formId)[0]);
-            //alert(formData);
+                event.preventDefault();
+                var title = $('#searchTitle').val();
+                // alert(title);
+                loadDashboardDataTitle(title);
+            });
 
-            // $.ajax({
-            //     type: "POST",
-            //                 url: $('#borrowform').attr('action'),
-            //                 data: formData,
-            //                 processData: false,
-            //                 contentType: false,
-            //                 headers: {
-            //                     "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-            //                 },
-            //                 success: function(response) {
-            //                     if(response)
-            //                     {
-            //                         alert('succ');
-            //                     }
-            //                     console.log(response.message);
-            //                     if (response.message) {
-            //                         alert(response.message);
-            //                         $('#success').text('success');
-            //                        // $("#deleteModal_").modal("hide");
-            //                         //location.reload();
-            //                         window.location.href = response.redirect_url;
 
-            //                     } else {
-            //                         let message = response.message || 'Something went wrong.';
-            //                         //$('#applyJobError').empty().append(message);
-            //                     }
-            //                 },
-            //                 error: function(xhr) {
-            //                    // let errorMsg = xhr.responseJSON.message ||
-            //                      //   "Something went wrong. Please try again.";
-            //                     //$('#applyJobError').empty().append(errorMsg);
-            //                 }
-            //             });
-            $.ajax({
-                    url: $('#borrowform').attr('action'),
-                    method: "POST",
 
-                    data:
-                      //  _token: "{{ csrf_token() }}",
+            $("#applyJobForm").submit(function(event) {
+                event.preventDefault();
+                if (validateApplyJobForm()) {
+                    let formData = new FormData(this);
+                    let selectedResume = $("#resumes").val();
 
-                        formData,
-                                     //},
-
-                            processData: false,
-    contentType: false,
-    cache: false,
-    headers: {
-            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-            },
-                    success: function(response) {
-                        alert(response);
-                        $("#dashboard-skeleton").addClass('d-none');
-                        $("#dashboard-content").html(response).fadeIn();
-                        //initializeDataTables();
-                    },
-                    error: function() {
-                     $("#dashboard-skeleton").removeClass('d-none');
-                       $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
-                           .fadeIn();
+                    if (selectedResume === "new") {
+                        formData.delete("resume");
+                    } else {
+                        formData.delete("new_resume");
                     }
-                });
 
-
-
-        }); //borrow
-
-                $("#applyJobForm").submit(function(event) {
-                    event.preventDefault();
-                    if (validateApplyJobForm()) {
-                        let formData = new FormData(this);
-                        let selectedResume = $("#resumes").val();
-
-                        if (selectedResume === "new") {
-                            formData.delete("resume");
-                        } else {
-                            formData.delete("new_resume");
-                        }
-
-                        $.ajax({
-                            url: "{{ route('admin.bookpage.index') }}",
-                            type: "POST",
-                            data: formData,
-                            processData: false,
-                            contentType: false,
-                            headers: {
-                                "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
-                            },
-                            success: function(response) {
-                                if (response.success) {
-                                    $("#applyJobModal").modal("hide");
-                                    location.reload();
-                                } else {
-                                    let message = response.message || 'Something went wrong.';
-                                    $('#applyJobError').empty().append(message);
-                                }
-                            },
-                            error: function(xhr) {
-                                let errorMsg = xhr.responseJSON.message ||
-                                    "Something went wrong. Please try again.";
-                                $('#applyJobError').empty().append(errorMsg);
+                    $.ajax({
+                        url: "{{ route('admin.bookpage.index') }}",
+                        type: "POST",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        headers: {
+                            "X-CSRF-TOKEN": $('meta[name="csrf-token"]').attr("content")
+                        },
+                        success: function(response) {
+                            if (response.success) {
+                                $("#applyJobModal").modal("hide");
+                                location.reload();
+                            } else {
+                                let message = response.message || 'Something went wrong.';
+                                $('#applyJobError').empty().append(message);
                             }
-                        });
-                    }
-                });
+                        },
+                        error: function(xhr) {
+                            let errorMsg = xhr.responseJSON.message ||
+                                "Something went wrong. Please try again.";
+                            $('#applyJobError').empty().append(errorMsg);
+                        }
+                    });
+                }
+            });
+        });
+
+
+
+        $("#titleSearch").submit(function(event) {
+            event.preventDefault();
+            var title = $('#searchTitle').val();
+            loadDashboardDataTitle(title);
+        });
+
+        function loadDashboardDataTitle(title) {
+            $("#dashboard-content").hide();
+            $("#dashboard-skeleton").removeClass('d-none');
+
+            $.ajax({
+                url: "{{ route('user.bookpage.dashboard.data') }}",
+                method: "POST",
+                data: {
+                    title: title,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    //alert(response);
+                    $("#dashboard-skeleton").addClass('d-none');
+                    $("#dashboard-content").html(response).fadeIn();
+                    initializeDataTables();
+                },
+                error: function() {
+                    $("#dashboard-skeleton").removeClass('d-none');
+                    $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                        .fadeIn();
+                }
+            });
+        }
+        // Function to initialize DataTables
+        function initializeDataTables() {
+            $('#appliedJobsTable', '#recommendedJobsTable').DataTable({
+                "destroy": true,
+                "order": []
             });
 
+            // $('#appliedJobsTable','#recommendedJobsTable').DataTable({
+            //     "destroy": true,
+            //     "order": []
+            // });
+        }
+        $('#genre').change(function() {
+            // alert('');
+            var genre = $('#genre').val();
+            //alert(genre);
+            gn = '"' + genre + '"';
+            gne = gn.split(",");
+            //alert(genre.split(","));
+            loadDashboardDataByGenre(gne);
 
+        });
 
-$("#titleSearch").submit(function(event) {
-                    event.preventDefault();
-                    var title = $('#searchTitle').val();
-                    loadDashboardDataTitle(title);
+        function loadDashboardDataByGenre(genre) {
+            //alert(genre);
+
+            $("#dashboard-content").hide();
+            $("#dashboard-skeleton").removeClass('d-none');
+
+            $.ajax({
+                url: "{{ route('user.bookpage.dashboard.data') }}",
+                method: "POST",
+                data: {
+                    genre: genre,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    //alert(data.author);
+                    // alert(response);
+                    $("#dashboard-skeleton").addClass('d-none');
+                    $("#dashboard-content").html(response).fadeIn();
+                    $("#newdiv").html(response).fadeIn();
+                    initializeDataTables();
+                },
+                error: function() {
+                    $("#dashboard-skeleton").removeClass('d-none');
+                    $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                        .fadeIn();
+                }
+            });
+        }
+
+        function loadDashboardData(start, end) {
+            $("#dashboard-content").hide();
+            $("#dashboard-skeleton").removeClass('d-none');
+
+            $.ajax({
+                url: "{{ route('user.bookpage.dashboard.data') }}",
+                method: "POST",
+                data: {
+                    start_date: start,
+                    end_date: end,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    alert('111');
+
+                    //$('#newdiv').html(data.message);
+                    $("#dashboard-skeleton").addClass('d-none');
+                    $("#dashboard-content").html(response).fadeIn();
+                    initializeDataTables();
+                    $('.borrowsend').on('click',function(e) {
+                        e.preventDefault();
+                        var formId = $('#borrowform').attr('id');
+                        //alert(formId);
+                        var bg = $('#borrowid').val(); // Extract BookPage ID 
+                        alert(bg)
+                        //                       alert('har bar click ho');
+                        $.ajax({
+                url: $('#borrowform').attr('action'),
+                method: "POST",
+                data: {
+                    borrowid: bg,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    alert('success');
+                   // window.reload();
+                   window.location.href = 'dashboard';
+                    $("#deleteModal_" + BookPageId).modal("hide");
+                    
+                },
+                error :  function(response)
+                {
+                    alert('some error');
+
+                }
+            ,
                 });
+            })
+        },
 
-                function loadDashboardDataTitle(title) {
-                $("#dashboard-content").hide();
-                $("#dashboard-skeleton").removeClass('d-none');
-
-                $.ajax({
-                    url: "{{ route('user.bookpage.dashboard.data') }}",
-                    method: "POST",
-                    data: {
-                        title: title,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        //alert(response);
-                        $("#dashboard-skeleton").addClass('d-none');
-                        $("#dashboard-content").html(response).fadeIn();
-                        initializeDataTables();
-                    },
-                    error: function() {
-                        $("#dashboard-skeleton").removeClass('d-none');
-                        $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
-                            .fadeIn();
-                    }
-                });
-            }
-            // Function to initialize DataTables
-            function initializeDataTables() {
-                $('#appliedJobsTable','#recommendedJobsTable').DataTable({
-                    "destroy": true,
-                    "order": []
-                });
-
-                // $('#appliedJobsTable','#recommendedJobsTable').DataTable({
-                //     "destroy": true,
-                //     "order": []
-                // });
-            }
-            $('#genre').change(function(){
-               // alert('');
-                var genre = $('#genre').val();
-                //alert(genre);
-                gn = '"'+genre+'"';
-                gne = gn.split(",");
-               //alert(genre.split(","));
-               loadDashboardDataByGenre(gne);
+                error: function(response) {
+                    $("#dashboard-skeleton").removeClass('d-none');
+                    $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                        .fadeIn();
+                },
 
             });
 
-            function loadDashboardDataByGenre(genre) {
-                //alert(genre);
+        }
 
-                $("#dashboard-content").hide();
-                $("#dashboard-skeleton").removeClass('d-none');
 
-                $.ajax({
-                    url: "{{ route('user.bookpage.dashboard.data') }}",
-                    method: "POST",
-                    data: {
-                        genre: genre,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        //alert(data.author);
-                       // alert(response);
-                        $("#dashboard-skeleton").addClass('d-none');
-                        $("#dashboard-content").html(response).fadeIn();
-                        $("#newdiv").html(response).fadeIn();
-                        initializeDataTables();
-                    },
-                    error: function() {
-                        $("#dashboard-skeleton").removeClass('d-none');
-                        $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
-                            .fadeIn();
-                    }
-                });
-            }
-            function loadDashboardData(start, end) {
-                $("#dashboard-content").hide();
-                $("#dashboard-skeleton").removeClass('d-none');
+        $('#author').change(function() {
+            // alert('');
+            var author = $('#author').val();
+            //alert(author);
+            loadDashboardDataByAuthor(author);
 
-                $.ajax({
-                    url: "{{ route('user.bookpage.dashboard.data') }}",
-                    method: "POST",
-                    data: {
-                        start_date: start,
-                        end_date: end,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        alert('111');
+        });
 
-                        //$('#newdiv').html(data.message);
-                        $("#dashboard-skeleton").addClass('d-none');
-                        $("#dashboard-content").html(response).fadeIn();
-                        initializeDataTables();
-                    },
-                    error: function() {
-                        $("#dashboard-skeleton").removeClass('d-none');
-                        $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
-                            .fadeIn();
-                    }
-                });
-            }
+        $('#year').change(function() {
+            //alert('');
+            var year = $('#year').val();
+            // alert(year);
+            loadDashboardDataByYear(year);
 
-            $('#author').change(function(){
-               // alert('');
-                var author = $('#author').val();
-                //alert(author);
-                loadDashboardDataByAuthor(author);
+        });
 
+
+
+        function loadDashboardDataByAuthor(author) {
+            //alert(author);
+            $("#dashboard-content").hide();
+            $("#dashboard-skeleton").removeClass('d-none');
+
+            $.ajax({
+                url: "{{ route('user.bookpage.dashboard.data') }}",
+                method: "POST",
+                data: {
+                    author: author,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    //alert(data.author);
+                    // alert(response);
+                    $("#dashboard-skeleton").addClass('d-none');
+                    $("#dashboard-content").html(response).fadeIn();
+                    initializeDataTables();
+                },
+                error: function() {
+                    $("#dashboard-skeleton").removeClass('d-none');
+                    $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                        .fadeIn();
+                }
             });
+        }
 
-            $('#year').change(function(){
-                //alert('');
-                var year = $('#year').val();
-               // alert(year);
-                loadDashboardDataByYear(year);
+        function loadDashboardDataByYear(year) {
+            //  alert(year);
+            $("#dashboard-content").hide();
+            $("#dashboard-skeleton").removeClass('d-none');
 
+            $.ajax({
+                url: "{{ route('user.bookpage.dashboard.data') }}",
+                method: "POST",
+                data: {
+                    year: year,
+                    _token: "{{ csrf_token() }}"
+                },
+                success: function(response) {
+                    //alert(data.author);
+                    // alert(response);
+                    $("#dashboard-skeleton").addClass('d-none');
+                    $("#dashboard-content").html(response).fadeIn();
+                    initializeDataTables();
+                },
+                error: function() {
+                    $("#dashboard-skeleton").removeClass('d-none');
+                    $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
+                        .fadeIn();
+                }
             });
+        }
+        ///
 
-
-
-            function loadDashboardDataByAuthor(author) {
-                //alert(author);
-                $("#dashboard-content").hide();
-                $("#dashboard-skeleton").removeClass('d-none');
-
-                $.ajax({
-                    url: "{{ route('user.bookpage.dashboard.data') }}",
-                    method: "POST",
-                    data: {
-                        author: author,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        //alert(data.author);
-                       // alert(response);
-                        $("#dashboard-skeleton").addClass('d-none');
-                        $("#dashboard-content").html(response).fadeIn();
-                        initializeDataTables();
-                    },
-                    error: function() {
-                        $("#dashboard-skeleton").removeClass('d-none');
-                        $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
-                            .fadeIn();
-                    }
-                });
-            }
-
-            function loadDashboardDataByYear(year) {
-              //  alert(year);
-                $("#dashboard-content").hide();
-                $("#dashboard-skeleton").removeClass('d-none');
-
-                $.ajax({
-                    url: "{{ route('user.bookpage.dashboard.data') }}",
-                    method: "POST",
-                    data: {
-                        year: year,
-                        _token: "{{ csrf_token() }}"
-                    },
-                    success: function(response) {
-                        //alert(data.author);
-                       // alert(response);
-                        $("#dashboard-skeleton").addClass('d-none');
-                        $("#dashboard-content").html(response).fadeIn();
-                        initializeDataTables();
-                    },
-                    error: function() {
-                        $("#dashboard-skeleton").removeClass('d-none');
-                        $("#dashboard-content").html("<p class='text-danger'>Failed to load data.</p>")
-                            .fadeIn();
-                    }
-                });
-            }
-
-        </script>
+        ////
+    </script>
     @endpush
 
     @push('styles')
-        <style>
-            .skeleton {
-                background-color: #e0e0e0;
-                border-radius: 4px;
-                animation: pulse 1.5s infinite ease-in-out;
+    <style>
+        .skeleton {
+            background-color: #e0e0e0;
+            border-radius: 4px;
+            animation: pulse 1.5s infinite ease-in-out;
+        }
+
+        .skeleton-text {
+            width: 60%;
+            height: 20px;
+            margin: 10px auto;
+        }
+
+        @keyframes pulse {
+            0% {
+                opacity: 1;
             }
 
-            .skeleton-text {
-                width: 60%;
-                height: 20px;
-                margin: 10px auto;
+            50% {
+                opacity: 0.5;
             }
 
-            @keyframes pulse {
-                0% {
-                    opacity: 1;
-                }
-
-                50% {
-                    opacity: 0.5;
-                }
-
-                100% {
-                    opacity: 1;
-                }
+            100% {
+                opacity: 1;
             }
-        </style>
+        }
+    </style>
     @endpush
 </x-user.layout>
