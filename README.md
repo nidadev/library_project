@@ -1,12 +1,12 @@
 # library_project
 
-# 📚 Library Management System
+# Library Management System
 
 A web-based Library Management System built to manage books, members, and borrowing records efficiently. This project demonstrates CRUD operations, database management, and a structured backend system for handling library workflows.
 
 ---
 
-## 🚀 Features
+##  Features
 
 - Add, Edit, Delete Books
 - Manage Library Members
@@ -18,7 +18,7 @@ A web-based Library Management System built to manage books, members, and borrow
 
 ---
 
-## 🛠 Tech Stack
+##  Tech Stack
 
 - PHP / Laravel
 - MySQL
